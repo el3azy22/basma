@@ -213,6 +213,9 @@ const CL={ain:'العين',wahda:'الوحدة',jazira:'الجزيرة',shababah
 // مقاسات الشعارات متوازنة بالحجم الظاهر (من مكتبة الهوية: grid_14)
 const CS={jazira:[188,188],sharjah:[184,213],dhafra:[173,208],ain:[156,225],nasr:[188,188],wahda:[171,221],wasl:[183,219],baniyas:[232,128],hatta:[186,211],khorfakkan:[197,201],shababahli:[195,202],ajman:[217,191],kalba:[187,188],united:[187,187]};
 const crest=(c,s)=>{const [w,h]=CS[c];const f=s/232;return `<img src="assets/crests/${c}.png" alt="${CL[c]}" style="width:${Math.round(w*f)}px;height:${Math.round(h*f)}px;object-fit:contain">`};
+const BAD=['كلب','حمار','زق','خرا','خره','شرموط','منيوك','نيك','قحب','طيز','زب','كس ','كسم','حيوان','تفو','وسخ','لعن'];
+const cleanName=v=>{v=(v||'').replace(/\s+/g,' ').trim();if(!/^[ء-يa-zA-Z ]{2,18}$/.test(v))return '';const t=' '+v+' ';return BAD.some(b=>t.includes(b))?'':v};
+const esc=t=>String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>Number(n||0).toLocaleString('en-US');
 const $=id=>document.getElementById(id);
 const ls={get(k){try{return JSON.parse(localStorage.getItem('alam_'+k))}catch(e){return null}},set(k,v){try{localStorage.setItem('alam_'+k,JSON.stringify(v))}catch(e){}}};
@@ -279,7 +282,7 @@ cv.addEventListener('click',ev=>{
     let rank=pos+1; while(rank+CELLS<=st.n)rank+=CELLS;   // آخر بصمة وقعت على هالمربع
     const rec=st.byRank&&st.byRank[rank];
     if(st.me&&st.me.k===rank)tip.innerHTML=`<b>بصمتك</b> · رقم ${fmt(rank)}`;
-    else tip.innerHTML=rec?`<b>#${fmt(rank)}</b> · ${EM[rec.e]}: «${MSG[rec.m]}»`:`بصمة رقم <b>${fmt(rank)}</b>`;
+    else tip.innerHTML=rec?`<b>#${fmt(rank)}</b> · ${rec.n?esc(rec.n)+' ':''}من ${EM[rec.e]}: «${MSG[rec.m]}»`:`بصمة رقم <b>${fmt(rank)}</b>`;
   }
   tip.style.left=Math.min(Math.max(ev.clientX-r.left,90),r.width-90)+'px';tip.style.top=(ev.clientY-r.top-8)+'px';
   tip.classList.add('on');clearTimeout(tip._t);tip._t=setTimeout(()=>tip.classList.remove('on'),2600);
@@ -340,7 +343,7 @@ setInterval(()=>{
   const f=st.feed||[]; if(!f.length)return; const v=f[ti++%Math.min(f.length,25)];
   const box=$('ticker'), old=box.querySelector('.tick');
   const el=document.createElement('div');el.className='tick';el.style.transform='translateY(100%)';el.style.opacity='0';
-  el.innerHTML=`<span class="who">من ${EM[v.e]}</span><span class="msg">«${MSG[v.m]}»</span>${v.c?crest(v.c,22):''}`;
+  el.innerHTML=`<span class="who">${v.n?esc(v.n)+' ':''}من ${EM[v.e]}</span><span class="msg">«${MSG[v.m]}»</span>${v.c?crest(v.c,22):''}`;
   box.appendChild(el);requestAnimationFrame(()=>{el.style.transform='';el.style.opacity='1'});
   if(old){old.style.transform='translateY(-100%)';old.style.opacity='0';setTimeout(()=>old.remove(),600)}
 },3200);
@@ -399,7 +402,7 @@ async function save(){
       st.n++;st.e[pick.e]=(st.e[pick.e]||0)+1;if(pick.c)st.c[pick.c]=(st.c[pick.c]||0)+1;k=st.n;st.recs['me']={e:pick.e,m:pick.m,t:Date.now()*2,...(pick.c?{c:pick.c}:{})};
     }else{
       const a=await tok(), inc={'.sv':{increment:1}};
-      const rec={e:pick.e,m:pick.m,t:{'.sv':'timestamp'}}; if(pick.c)rec.c=pick.c;
+      const rec={e:pick.e,m:pick.m,t:{'.sv':'timestamp'}}; if(pick.c)rec.c=pick.c; const nm=cleanName(pick.name); if(nm)rec.n=nm;
       const body={[`alam/g/${a.u}`]:rec,'alam/t/n':inc,[`alam/t/e/${pick.e}`]:inc}; if(pick.c)body[`alam/t/c/${pick.c}`]=inc;
       let mine=null;
       for(let tr=0;tr<6&&!mine;tr++){ // لو كثير ناس حطوا بنفس اللحظة: نعيد المحاولة
@@ -529,7 +532,11 @@ async function showResult(){
   ui();
 })();
 window.close_=close_; window.drawCard=drawCard; window.drawFlag=drawFlag; window.st=st;
-refresh(true);
+refresh(true).then(async()=>{try{
+  if(!USE_NET||!st.me||ls.get('nameSent'))return; const nm=cleanName(st.me.name); if(!nm)return;
+  const a=await tok(); const cur=await getJ(`alam/g/${a.u}`); if(!cur||cur.n){ls.set('nameSent',1);return}
+  const r=await fetch(`${DB}/alam/g/${a.u}/n.json?${[NSQ,'auth='+a.t].filter(Boolean).join('&')}`,{method:'PUT',body:JSON.stringify(nm)}); if(r.ok)ls.set('nameSent',1);
+}catch(e){}});
 </script>
 </body>
 </html>
