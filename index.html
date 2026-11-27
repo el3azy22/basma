@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>بصمة وطن · عيد الاتحاد الـ55</title>
+<meta name="description" content="حط بصمتك مربع في علم الإمارات، وخلّنا نكمّل العلم مع بعض في عيد الاتحاد الـ55.">
+<meta name="theme-color" content="#071D2B">
+<meta property="og:type" content="website">
+<meta property="og:title" content="بصمة وطن · حط بصمتك في علم الإمارات">
+<meta property="og:description" content="كل بصمة مربع.. وكلنا نكمّل العلم مع بعض في عيد الاتحاد الـ55 🇦🇪">
+<meta property="og:url" content="https://el3azy.com/basma/">
+<meta property="og:image" content="https://el3azy.com/basma/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="بصمة وطن · حط بصمتك في علم الإمارات">
+<meta name="twitter:description" content="كل بصمة مربع.. وكلنا نكمّل العلم مع بعض في عيد الاتحاد الـ55 🇦🇪">
+<meta name="twitter:image" content="https://el3azy.com/basma/og.jpg">
+<link rel="icon" type="image/png" href="icon.png">
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="preload" href="assets/ReadexPro.ttf" as="font" type="font/ttf" crossorigin>
+<style>
+@font-face{font-family:'Readex Pro';src:url(assets/ReadexPro.ttf) format('truetype');font-weight:160 700;font-display:swap}
+:root{--navy:#071D2B;--navy2:#0c2a3d;--navy3:#123850;--gold:#D7B465;--gold2:#f1dca4;--ivory:#FFF5E5;--red:#EF3340;--green:#00843D;--line:rgba(255,245,229,.12);--muted:rgba(255,245,229,.62)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--navy);color:var(--ivory);font-family:'Readex Pro',system-ui,sans-serif;font-weight:500}
+body{min-height:100vh;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+ background:radial-gradient(120% 60% at 50% -10%,rgba(215,180,101,.16),transparent 60%),radial-gradient(90% 50% at 100% 100%,rgba(0,132,61,.10),transparent 60%),radial-gradient(90% 50% at 0% 80%,rgba(239,51,64,.08),transparent 60%)}
+.wrap{position:relative;z-index:1;max-width:560px;margin:0 auto;padding:18px 16px 120px}
+button{font-family:inherit;cursor:pointer;border:0;color:inherit}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.chip{font-size:12.5px;font-weight:600;padding:7px 12px;border-radius:99px;border:1px solid var(--line);background:rgba(255,255,255,.04);white-space:nowrap}
+.chip.g{color:var(--gold);border-color:rgba(215,180,101,.35)}
+.chip i{display:inline-block;width:7px;height:7px;border-radius:50%;background:#2ee07a;margin-inline-start:6px;box-shadow:0 0 8px #2ee07a;animation:blink 1.6s infinite}
+@keyframes blink{50%{opacity:.35}}
+h1{font-size:46px;line-height:1.45;margin:14px 0 0;padding:.06em 0 .12em;font-weight:700;letter-spacing:0;
+ background:linear-gradient(100deg,#fff 0%,var(--gold2) 40%,var(--gold) 55%,#fff 75%);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sheen 6s linear infinite}
+@keyframes sheen{to{background-position:-220% 0}}
+.sub{margin:0;color:var(--ivory);opacity:.85;font-size:17px;font-weight:600;line-height:1.7}
+.flagcard{margin:20px -4px 0;padding:14px 12px 14px;border-radius:22px;background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.02));border:1px solid var(--line);box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.flagbox{position:relative;border-radius:14px;overflow:visible;background:radial-gradient(120% 120% at 50% 40%,rgba(255,255,255,.07),rgba(255,255,255,.015))}
+#flag{display:block;width:100%;height:auto;touch-action:manipulation}
+.tip{position:absolute;z-index:5;transform:translate(-50%,-100%);background:#fff;color:var(--navy);font-size:12.5px;font-weight:600;padding:8px 11px;border-radius:12px;white-space:nowrap;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.4);opacity:0;transition:opacity .15s;max-width:300px;overflow:hidden;text-overflow:ellipsis}
+.tip.on{opacity:1}
+.tip b{color:#9a7a30}
+.stats{display:flex;align-items:flex-end;justify-content:space-between;margin-top:14px;gap:10px}
+.big{font-size:34px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.big small{font-size:14px;font-weight:500;color:var(--muted);margin-inline-start:6px}
+.pct{text-align:left;font-size:13px;color:var(--muted)}
+.pct b{display:block;color:var(--gold);font-size:18px}
+.bar{height:6px;border-radius:9px;background:rgba(255,255,255,.08);margin-top:10px;overflow:hidden}
+.bar>div{height:100%;width:0;border-radius:9px;background:linear-gradient(90deg,var(--red),#fff,var(--green));transition:width 1s}
+.ticker{margin-top:14px;height:44px;border-radius:14px;background:rgba(0,0,0,.18);border:1px solid var(--line);overflow:hidden;position:relative}
+.tick{position:absolute;inset:0;display:flex;align-items:center;gap:9px;padding:0 14px;font-size:14px;transition:transform .55s cubic-bezier(.2,.8,.2,1),opacity .55s}
+.tick .who{color:var(--gold);font-weight:600;white-space:nowrap}
+.tick .msg{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1}
+.tick img{height:20px;width:auto;opacity:.9}
+.mine{display:none;margin-top:14px;padding:14px;border-radius:16px;background:linear-gradient(120deg,rgba(215,180,101,.18),rgba(215,180,101,.05));border:1px solid rgba(215,180,101,.4);align-items:center;justify-content:space-between;gap:10px}
+.mine.on{display:flex}
+.mine b{color:var(--gold2);font-size:17px}
+.mine span{display:block;font-size:12.5px;color:var(--muted);margin-top:3px}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:17px;border-radius:16px;padding:16px 18px;transition:transform .12s}
+.btn:active{transform:scale(.97)}
+.btn.gold{background:linear-gradient(135deg,#f3e2b0,var(--gold) 45%,#b58f3e);color:#1d1606;box-shadow:0 10px 30px rgba(215,180,101,.35),inset 0 1px 0 rgba(255,255,255,.6)}
+.btn.sm{font-size:14px;padding:10px 14px;border-radius:12px}
+.btn.ghost{background:rgba(255,255,255,.07);border:1px solid var(--line);color:var(--ivory)}
+.btn.x{background:#000;color:#fff;border:1px solid rgba(255,255,255,.25)}
+.btn.wa{background:#1fa855;color:#fff}
+.btn[disabled]{opacity:.45;pointer-events:none}
+.cta{position:fixed;left:0;right:0;bottom:0;z-index:20;padding:12px 16px calc(14px + env(safe-area-inset-bottom));background:linear-gradient(180deg,transparent,rgba(7,29,43,.92) 35%);display:flex;justify-content:center;align-items:center;gap:10px}
+.cta .btn{flex:1;max-width:464px;position:relative;overflow:hidden}
+.cta .btn::after{content:"";position:absolute;top:0;bottom:0;width:40%;left:-60%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.7),transparent);transform:skewX(-20deg);animation:shine 3.2s infinite}
+@keyframes shine{60%,100%{left:130%}}
+.cta.hide .btn{display:none}.cta.hide{background:none;justify-content:flex-end}
+section.blk{margin-top:26px}
+.blk h2{font-size:16px;margin:0 0 2px;font-weight:700;color:var(--gold2)}
+.blk p.h{margin:0 0 12px;color:var(--muted);font-size:12.5px}
+.race .row{display:grid;grid-template-columns:86px 1fr 52px;align-items:center;gap:10px;margin:9px 0;font-size:14.5px}
+.race .row .nm{font-weight:600;white-space:nowrap}
+.race .tr{height:12px;border-radius:9px;background:rgba(255,255,255,.07);overflow:hidden}
+.race .tr>div{height:100%;border-radius:9px;background:linear-gradient(90deg,#b58f3e,var(--gold),#f3e2b0);width:0;transition:width 1s}
+.race .row.lead .tr>div{background:linear-gradient(90deg,var(--green),#3ccf7e)}
+.race .n{text-align:left;font-variant-numeric:tabular-nums;color:var(--muted);font-size:13.5px}
+.ems{display:flex;flex-wrap:wrap;gap:7px}
+.emc{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:99px;background:rgba(255,255,255,.04);border:1px solid var(--line);font-size:13px}
+.emc .nm{font-weight:600}.emc .n{color:var(--gold);font-weight:600;font-variant-numeric:tabular-nums}
+.clubs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.cl{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:12px;background:rgba(255,255,255,.035);border:1px solid var(--line);font-size:13px}
+.cl .cr{width:24px;height:24px;display:flex;align-items:center;justify-content:center;flex:none}
+.cl .cr img{max-width:100%;max-height:100%}
+.cl .nm{flex:1;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cl .n{color:var(--gold);font-weight:600;font-variant-numeric:tabular-nums;font-size:12.5px}
+.how{display:flex;align-items:center;justify-content:space-between;gap:4px;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.035);border:1px solid var(--line);font-size:12.5px;color:var(--ivory)}
+.how div{display:flex;align-items:center;gap:6px;white-space:nowrap}
+.how b{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:rgba(215,180,101,.16);color:var(--gold);font-size:11.5px}
+.how i{color:var(--muted);font-style:normal;font-size:11px}
+@media(max-width:380px){.how{font-size:11.5px;padding:9px 9px}.how i{display:none}.how div{gap:4px}.how b{width:18px;height:18px;font-size:10.5px}}
+.mus{flex:none;width:54px;height:54px;border-radius:50%;background:rgba(7,29,43,.85);border:1px solid rgba(215,180,101,.5);color:var(--gold);font-size:17px;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,.4);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.mus.off{opacity:.6}
+.mus .bars{display:flex;gap:2px;align-items:flex-end;height:14px}.mus .bars i{width:3px;background:var(--gold);border-radius:2px;animation:eq 1s infinite ease-in-out}
+.mus .bars i:nth-child(2){animation-delay:.2s}.mus .bars i:nth-child(3){animation-delay:.4s}
+@keyframes eq{0%,100%{height:4px}50%{height:14px}}
+.credit{margin:44px auto 0;padding-top:22px;border-top:1px solid var(--line);display:flex;flex-direction:column;align-items:center;gap:10px}
+.credit .lab{color:var(--muted);font-size:12.5px}
+.sig{display:inline-flex;align-items:center;gap:10px;padding:5px 5px 5px 20px;border-radius:99px;border:1px solid rgba(215,180,101,.45);background:rgba(255,255,255,.04);text-decoration:none}
+.sig img{width:52px;height:52px;border-radius:50%}
+.sig b{color:var(--gold);font-size:18px}
+.sig i{width:5px;height:5px;border-radius:50%;background:rgba(215,180,101,.6)}
+.sig span{color:var(--ivory);opacity:.85;font-size:14px;font-weight:600;direction:ltr}
+/* sheet */
+.ov{display:none;margin-top:16px;scroll-margin-top:12px}
+.ov.on{display:block}
+.sheet{width:100%;background:linear-gradient(180deg,#0f3147,#0a2433);border-radius:22px;border:1px solid rgba(215,180,101,.35);padding:18px 16px 20px;box-shadow:0 20px 60px rgba(0,0,0,.35);animation:up .35s cubic-bezier(.2,.8,.2,1)}
+@keyframes up{from{transform:translateY(40px);opacity:0}}
+.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.steps{display:flex;gap:6px}
+.steps i{width:28px;height:5px;border-radius:9px;background:rgba(255,255,255,.14)}
+.steps i.on{background:var(--gold)}
+.close{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.08);font-size:20px;line-height:36px}
+.sheet h3{font-size:22px;margin:14px 0 4px}
+.sheet p.h{margin:0 0 16px;color:var(--muted);font-size:14px}
+.em{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.em button{padding:16px 10px;border-radius:16px;background:rgba(255,255,255,.05);border:1.5px solid var(--line);font-size:17px;font-weight:600;transition:.15s}
+.em button:last-child{grid-column:1/-1}
+.em button.on,.msgs button.on,.cg button.on{border-color:var(--gold);background:rgba(215,180,101,.14);box-shadow:0 0 0 3px rgba(215,180,101,.15)}
+.msgs{display:flex;flex-direction:column;gap:8px}
+.msgs button{text-align:right;padding:14px 16px;border-radius:14px;background:rgba(255,255,255,.05);border:1.5px solid var(--line);font-size:16.5px;font-weight:600;line-height:1.5}
+.field{width:100%;padding:15px 16px;border-radius:14px;background:rgba(255,255,255,.06);border:1.5px solid var(--line);color:var(--ivory);font-family:inherit;font-size:17px;font-weight:600;outline:none}
+.field:focus{border-color:var(--gold)}
+.lbl{display:block;font-size:14.5px;font-weight:600;margin:18px 0 8px}
+.lbl small{color:var(--muted);font-weight:500}
+.cg{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}
+.cg button{aspect-ratio:1;border-radius:14px;background:rgba(255,255,255,.05);border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;padding:6px}
+.cg button img{max-width:100%;max-height:100%}
+.cg button.none{font-size:12px;font-weight:600;color:var(--muted)}
+.cgn{min-height:20px;margin-top:8px;font-size:13.5px;color:var(--gold);font-weight:600}
+.nav{display:flex;gap:10px;margin-top:22px}
+.nav .btn{flex:1}
+.nav .ghost{flex:0 0 auto}
+.res img.card{width:100%;border-radius:16px;display:block;box-shadow:0 20px 50px rgba(0,0,0,.5)}
+.res .acts{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:14px}
+.res .acts .btn:first-child{grid-column:1/-1}
+.err{color:#ff9b9b;font-size:13.5px;margin-top:10px;min-height:18px;text-align:center}
+.fly{position:fixed;z-index:60;width:16px;height:16px;border-radius:4px;background:var(--gold);box-shadow:0 0 20px 6px rgba(215,180,101,.8);pointer-events:none}
+.demo{position:fixed;top:8px;left:8px;z-index:70;font-size:11px;background:#b8860b;color:#000;padding:3px 8px;border-radius:8px;font-weight:700}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <span class="chip g">عيد الاتحاد الـ55 🇦🇪</span>
+    <span class="chip" id="count"></span>
+  </div>
+  <h1>بصمة وطن</h1>
+  <p class="sub">حط بصمتك وكمّل العلم معانا</p>
+
+  <div class="flagcard">
+    <div class="flagbox"><canvas id="flag" width="1056" height="528" aria-label="علم الإمارات من بصمات المشاركين"></canvas><div class="tip" id="tip"></div></div>
+    <div class="stats">
+      <div class="big" id="total">0<small>بصمة</small></div>
+      <div class="pct" id="pctlbl">العلم مكتمل<b id="pct">0%</b></div>
+    </div>
+    <div class="bar"><div id="pbar"></div></div>
+    <div class="ticker" id="ticker"></div>
+    <div class="mine" id="mine"><div><b id="mineNo"></b><span>مربعك يلمع في العلم ✨</span></div></div>
+  </div>
+
+  <div class="ov" id="ov"><div class="sheet" id="sheet"></div></div>
+
+  <section class="blk">
+    <h2>كيف تشارك؟</h2>
+    <div class="how">
+      <div><b>1</b>اختار إمارتك</div><i>‹</i>
+      <div><b>2</b>اختار عبارتك</div><i>‹</i>
+      <div><b>3</b>شارك بطاقتك</div>
+    </div>
+  </section>
+
+  <section class="blk">
+    <h2>من كل إمارة.. بصمة</h2>
+    <p class="h">الإمارات السبع تكتب في حب الوطن</p>
+    <div class="ems" id="race"></div>
+  </section>
+
+  <section class="blk">
+    <h2>جماهير الأندية.. تحت علم واحد</h2>
+    <p class="h">نختلف في الملعب.. ونجتمع على حب الإمارات</p>
+    <div class="clubs" id="clubs"></div>
+  </section>
+
+
+
+  <div class="credit"><span class="lab">إنشاء الصفحة</span><a class="sig" href="https://el3azy.com" target="_blank" rel="noopener"><img src="assets/avatar.png" alt="العازي" width="52" height="52"><b>العازي</b><i></i><span>el3azy.com</span></a></div>
+</div>
+
+<div class="cta" id="cta"><button class="btn gold" id="go">حط بصمتك في العلم 🇦🇪</button><button class="mus off" id="mus" aria-label="تشغيل أو إيقاف الأغنية">♪</button></div>
+
+
+<script>
+'use strict';
+const FB={key:'AIzaSyCJVYgLTqvj2k1KnvLYo6Z1feOS4E8fj94',db:'https://el3azy-3b64e-default-rtdb.europe-west1.firebasedatabase.app'};
+const Q=new URLSearchParams(location.search);
+const LIVE=location.hostname==='el3azy.com'&&!Q.has('demo');           // خارج el3azy.com: تجربة بدون كتابة في قاعدة البيانات
+const EMU=Q.get('emu');                                                    // اختبار على المحاكي
+const DB=EMU?('http://127.0.0.1:9000'):FB.db, NSQ=EMU?'ns=demo-el3':'';
+const USE_NET=LIVE||!!EMU;
+const EMIR=[['ad','أبوظبي'],['dxb','دبي'],['shj','الشارقة'],['ajm','عجمان'],['uaq','أم القيوين'],['rak','رأس الخيمة'],['fuj','الفجيرة']];
+const EM=Object.fromEntries(EMIR);
+const MSG=['دام عزج يا دار زايد','الحمد لله على نعمة الإمارات','إماراتي وأفتخر','كل عام والإمارات بخير','نفديك بالأرواح يا وطن','دام الأمان وعاش العلم يا إماراتنا','الحمد لله على نعمة بوخالد','اللهم احفظ الإمارات قيادةً وشعباً','حصّنتك باسم الله يا وطن','بوخالد.. هيبة وطن وشموخ دار'];
+const CL={ain:'العين',wahda:'الوحدة',jazira:'الجزيرة',shababahli:'شباب الأهلي',sharjah:'الشارقة',wasl:'الوصل',nasr:'النصر',baniyas:'بني ياس',ajman:'عجمان',kalba:'كلباء',khorfakkan:'خورفكان',dhafra:'الظفرة',hatta:'حتا',united:'يونايتد'};
+// مقاسات الشعارات متوازنة بالحجم الظاهر (من مكتبة الهوية: grid_14)
+const CS={jazira:[188,188],sharjah:[184,213],dhafra:[173,208],ain:[156,225],nasr:[188,188],wahda:[171,221],wasl:[183,219],baniyas:[232,128],hatta:[186,211],khorfakkan:[197,201],shababahli:[195,202],ajman:[217,191],kalba:[187,188],united:[187,187]};
+const crest=(c,s)=>{const [w,h]=CS[c];const f=s/232;return `<img src="assets/crests/${c}.png" alt="${CL[c]}" style="width:${Math.round(w*f)}px;height:${Math.round(h*f)}px;object-fit:contain">`};
+const fmt=n=>Number(n||0).toLocaleString('en-US');
+const $=id=>document.getElementById(id);
+const ls={get(k){try{return JSON.parse(localStorage.getItem('alam_'+k))}catch(e){return null}},set(k,v){try{localStorage.setItem('alam_'+k,JSON.stringify(v))}catch(e){}}};
+if(!LIVE&&!EMU){const d=document.createElement('div');d.className='demo';d.textContent='نسخة تجربة';document.body.appendChild(d)}
+
+/* ───── العلم ───── */
+const COLS=48,ROWS=24,CELLS=COLS*ROWS,HOIST=12;
+const FC={r:[239,51,64],g:[0,132,61],w:[255,255,255],k:[10,10,12]};
+const kind=(x,y)=>x<HOIST?'r':(y<ROWS/3?'g':(y<2*ROWS/3?'w':'k'));
+// ترتيب تعبئة ثابت (يتوزع على العلم كله عشان يبان العلم من أول بصمات)
+const ORDER=(()=>{const a=[...Array(CELLS).keys()];let s=55;const r=()=>(s=(s*1103515245+12345)%2147483648)/2147483648;for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a})();
+const cellOf=rank=>ORDER[(rank-1)%CELLS];
+const st={n:0,e:{},c:{},recs:{},lastT:0,me:USE_NET?ls.get('me'):null,pop:new Map()};
+const cv=$('flag'),cx=cv.getContext('2d');
+function drawFlag(ctx,W,H,t,o={}){
+  const n=o.n??st.n, full=n>=CELLS, filled=full?CELLS:n, round=Math.floor(Math.max(n-1,0)/CELLS);
+  const set=new Uint8Array(CELLS); for(let i=0;i<filled;i++)set[ORDER[i]]=1;
+  const pad=W*0.012, cw=(W-pad*2)/COLS, chh=(H-pad*2)/ROWS, gap=Math.max(1,cw*0.12);
+  const meCell=o.me?cellOf(o.me):-1;
+  ctx.clearRect(0,0,W,H);
+  let meR=null; const rr=Math.min(cw,chh)*0.22;
+  for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){
+    const i=y*COLS+x, k=kind(x,y), c=FC[k];
+    const ph=x/COLS*Math.PI*2.2-t*1.6, amp=o.still?0:chh*0.55*(0.25+0.75*x/COLS);
+    const dy=Math.sin(ph)*amp, shade=o.still?0:Math.cos(ph)*0.10*(0.3+0.7*x/COLS);
+    const px=pad+x*cw, py=pad+y*chh+dy;
+    const pop=st.pop.get(i); let grow=0;
+    if(pop){const p=(performance.now()-pop)/900; if(p>1)st.pop.delete(i); else if(p>0)grow=Math.sin(p*Math.PI)*cw*0.5}
+    const bx=px+gap/2-grow/2, by=py+gap/2-grow/2, bw=cw-gap+grow, bh=chh-gap+grow;
+    if(!set[i]){ // مربع فاضي: طيف خفيف من لونه
+      ctx.fillStyle=k==='k'?'rgba(255,255,255,.045)':`rgba(${c[0]},${c[1]},${c[2]},.15)`;rrect(ctx,bx,by,bw,bh,rr);
+    }else if(k==='k'){ // الأسود: داكن مع حافة فضية عشان يبان على الكحلي
+      const s=1+shade;ctx.fillStyle=`rgb(${18*s|0},${19*s|0},${22*s|0})`;rrect(ctx,bx,by,bw,bh,rr);
+      ctx.strokeStyle=`rgba(255,255,255,${.24+Math.max(0,shade)})`;ctx.lineWidth=Math.max(1,cw*.07);ctx.beginPath();ctx.roundRect?ctx.roundRect(bx,by,bw,bh,rr):ctx.rect(bx,by,bw,bh);ctx.stroke();
+      ctx.fillStyle='rgba(255,255,255,.12)';ctx.fillRect(bx+bw*.15,by+bh*.12,bw*.7,bh*.18);
+    }else{
+      const s=1+shade;ctx.fillStyle=`rgb(${Math.min(255,c[0]*s)|0},${Math.min(255,c[1]*s)|0},${Math.min(255,c[2]*s)|0})`;rrect(ctx,bx,by,bw,bh,rr);
+      ctx.fillStyle=`rgba(255,255,255,${0.12+Math.max(0,shade)})`;ctx.fillRect(bx+bw*.12,by+bh*.1,bw*.76,bh*.22);
+    }
+    if(i===meCell)meR={x:px,y:py};
+  }
+  if(meR){ // بصمتي فوق الكل
+    const pulse=o.still?1:(0.6+0.4*Math.sin(t*4)), {x:px,y:py}=meR;
+    ctx.save();ctx.shadowColor='rgba(241,220,164,1)';ctx.shadowBlur=cw*2.6*pulse;ctx.fillStyle='#f1dca4';
+    rrect(ctx,px-cw*0.2,py-chh*0.2,cw*1.4,chh*1.4,rr);ctx.restore();
+    ctx.strokeStyle='#fff';ctx.lineWidth=Math.max(1.5,cw*0.14);ctx.strokeRect(px-cw*0.3,py-chh*0.3,cw*1.6,chh*1.6);
+  }
+  return {pad,cw,chh,round,meR};
+}
+function rrect(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath();c.fill()}
+let T0=performance.now(), vis=true, geo={};
+function loop(now){ if(vis){geo=drawFlag(cx,cv.width,cv.height,(now-T0)/1000,{me:st.me&&st.me.k})} requestAnimationFrame(loop)}
+new IntersectionObserver(es=>{vis=es[0].isIntersecting}).observe(cv);
+requestAnimationFrame(loop);
+
+/* لمس العلم: منو حاط هالمربع */
+cv.addEventListener('click',ev=>{
+  const r=cv.getBoundingClientRect(), sx=cv.width/r.width, x=(ev.clientX-r.left)*sx, y=(ev.clientY-r.top)*sx;
+  const cx_=Math.floor((x-geo.pad)/geo.cw), cy_=Math.floor((y-geo.pad)/geo.chh); if(cx_<0||cy_<0||cx_>=COLS||cy_>=ROWS)return;
+  const cell=cy_*COLS+cx_, pos=ORDER.indexOf(cell), tip=$('tip');
+  const filled=Math.min(st.n,CELLS);
+  if(pos>=filled){tip.innerHTML='هالمربع ينتظر بصمتك 👇'}
+  else{
+    let rank=pos+1; while(rank+CELLS<=st.n)rank+=CELLS;   // آخر بصمة وقعت على هالمربع
+    const rec=st.byRank&&st.byRank[rank];
+    if(st.me&&st.me.k===rank)tip.innerHTML=`<b>بصمتك</b> · رقم ${fmt(rank)}`;
+    else tip.innerHTML=rec?`<b>#${fmt(rank)}</b> · ${EM[rec.e]}: «${MSG[rec.m]}»`:`بصمة رقم <b>${fmt(rank)}</b>`;
+  }
+  tip.style.left=Math.min(Math.max(ev.clientX-r.left,90),r.width-90)+'px';tip.style.top=(ev.clientY-r.top-8)+'px';
+  tip.classList.add('on');clearTimeout(tip._t);tip._t=setTimeout(()=>tip.classList.remove('on'),2600);
+});
+
+/* ───── البيانات ───── */
+const api=(p,q='')=>`${DB}/${p}.json?${[NSQ,q].filter(Boolean).join('&')}`;
+async function getJ(p,q){const r=await fetch(api(p,q),{cache:'no-store'});if(!r.ok)throw new Error(r.status);return r.json()}
+function addRecs(obj){
+  if(!obj)return;
+  for(const [u,v] of Object.entries(obj)){if(v&&v.t){st.recs[u]=v;if(v.t>st.lastT)st.lastT=v.t}}
+  // ترتيب البصمات المعروفة: آخر بصمة رقمها = العدد الكلي
+  const arr=Object.entries(st.recs).sort((a,b)=>a[1].t-b[1].t||(a[0]<b[0]?-1:1));
+  st.byRank={}; const base=st.n-arr.length; arr.forEach(([u,v],i)=>{st.byRank[base+i+1]=v});
+  st.feed=arr.slice(-40).reverse().map(x=>x[1]);
+}
+async function refresh(first){
+  if(!USE_NET){demoTick(first);return render()}
+  try{
+    const t=await getJ('alam/t'); const prev=st.n;
+    st.n=(t&&t.n)||0; st.e=(t&&t.e)||{}; st.c=(t&&t.c)||{};
+    if(first){addRecs(await getJ('alam/g','orderBy="t"&limitToLast=200'))}
+    else if(st.n>prev){addRecs(await getJ('alam/g',`orderBy="t"&startAt=${st.lastT+1}&limitToFirst=200`))}
+    if(!first&&st.n>prev){for(let r=prev+1;r<=st.n;r++)st.pop.set(cellOf(r),performance.now()+(r-prev)*120)}
+    render();
+  }catch(e){console.warn(e)}
+}
+setInterval(()=>{if(!document.hidden)refresh(false)},12000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)refresh(false)});
+
+/* تجربة بدون إنترنت: أرقام وهمية تتحرك */
+function demoTick(first){
+  const pick=a=>a[Math.floor(Math.random()*a.length)];
+  const add=k=>{for(let i=0;i<k;i++){const e=pick(['ad','ad','ad','dxb','dxb','shj','shj','rak','ajm','fuj','uaq']);const c=Math.random()<.6?pick(Object.keys(CL)):null;
+    st.n++;st.e[e]=(st.e[e]||0)+1;if(c)st.c[c]=(st.c[c]||0)+1;const v={e,m:Math.floor(Math.random()*MSG.length),t:Date.now()+st.n,...(c?{c}:{})};st.recs['d'+st.n]=v;if(!first)st.pop.set(cellOf(st.n),performance.now()+i*150)}};
+  if(first){add(+Q.get('n')||734)}else add(1+Math.floor(Math.random()*4));
+  const arr=Object.values(st.recs).sort((a,b)=>a.t-b.t);st.byRank={};arr.forEach((v,i)=>st.byRank[st.n-arr.length+i+1]=v);st.feed=arr.slice(-40).reverse();
+}
+
+/* ───── العرض ───── */
+function render(){
+  $('total').innerHTML=`${fmt(st.n)}<small>بصمة</small>`;
+  const done=Math.floor(st.n/CELLS), part=st.n%CELLS, p=done&&!part?100:Math.round(part/CELLS*100);
+  $('pctlbl').innerHTML=done?`العلم مكتمل ${done>1?done+' مرات':''} 🎉<b>العلم رقم ${done+1}: ${p}%</b>`:`العلم مكتمل<b>${p}%</b>`;
+  $('pbar').style.width=p+'%';
+  const left=Math.ceil((new Date('2026-12-02T00:00:00+04:00')-Date.now())/864e5);
+  $('count').innerHTML=left>1?`<i></i>باقي ${left} أيام على العيد`:(left===1?'<i></i>باجر عيد الاتحاد':'<i></i>عيد اتحاد سعيد');
+  // الإمارات بترتيبها الرسمي، بدون ترتيب ولا نسب
+  $('race').innerHTML=EMIR.map(([k,n])=>`<div class="emc"><span class="nm">${n}</span><span class="n">${fmt(st.e[k]||0)}</span></div>`).join('');
+  // الأندية بترتيب ثابت
+  $('clubs').innerHTML=Object.keys(CL).map(k=>`<div class="cl"><span class="cr">${crest(k,24)}</span><span class="nm">${CL[k]}</span><span class="n">${fmt(st.c[k]||0)}</span></div>`).join('');
+  // بصمتي
+  if(st.me){$('mine').classList.add('on');$('mineNo').textContent=`بصمتك رقم ${fmt(st.me.k)}`;$('go').textContent='شارك بطاقتك 🇦🇪'}
+}
+/* شريط آخر البصمات */
+let ti=0;
+setInterval(()=>{
+  const f=st.feed||[]; if(!f.length)return; const v=f[ti++%Math.min(f.length,25)];
+  const box=$('ticker'), old=box.querySelector('.tick');
+  const el=document.createElement('div');el.className='tick';el.style.transform='translateY(100%)';el.style.opacity='0';
+  el.innerHTML=`<span class="who">من ${EM[v.e]}</span><span class="msg">«${MSG[v.m]}»</span>${v.c?crest(v.c,22):''}`;
+  box.appendChild(el);requestAnimationFrame(()=>{el.style.transform='';el.style.opacity='1'});
+  if(old){old.style.transform='translateY(-100%)';old.style.opacity='0';setTimeout(()=>old.remove(),600)}
+},3200);
+
+/* ───── المشاركة: 3 خطوات ───── */
+const pick={e:null,m:null,c:null,name:''};
+const ov=$('ov'), sh=$('sheet');
+const toFlow=()=>setTimeout(()=>ov.scrollIntoView({behavior:'smooth',block:'start'}),30);
+function open_(){ ov.classList.add('on'); $('cta').classList.add('hide'); if(st.me)showResult(); else step1() }
+function close_(){ov.classList.remove('on');sh.innerHTML='';$('cta').classList.remove('hide')}
+ov.addEventListener('click',e=>{if(e.target===ov)close_()});
+$('go').onclick=open_; 
+const head=n=>`<div class="sh"><div class="steps">${[1,2,3].map(i=>`<i class="${i<=n?'on':''}"></i>`).join('')}</div><button class="close" onclick="close_()" aria-label="أغلق">×</button></div>`;
+function step1(){
+  toFlow();
+  sh.innerHTML=head(1)+`<h3>من أي إمارة؟</h3><p class="h">بصمتك تنضاف لبصمات إمارتك</p><div class="em">${EMIR.map(([k,n])=>`<button data-e="${k}" class="${pick.e===k?'on':''}">${n}</button>`).join('')}</div>`;
+  sh.querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>{pick.e=b.dataset.e;sh.querySelectorAll('[data-e]').forEach(x=>x.classList.toggle('on',x===b));setTimeout(step2,220)});
+}
+function step2(){
+  toFlow();
+  sh.innerHTML=head(2)+`<h3>اختار عبارتك للإمارات</h3><p class="h">عبارتك تطلع في بطاقتك وفي شريط البصمات</p><div class="msgs">${MSG.map((m,i)=>`<button data-m="${i}" class="${pick.m===i?'on':''}">${m}</button>`).join('')}</div><div class="nav"><button class="btn ghost" id="b1">رجوع</button></div>`;
+    sh.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{pick.m=+b.dataset.m;sh.querySelectorAll('[data-m]').forEach(x=>x.classList.toggle('on',x===b));setTimeout(step3,220)});
+  $('b1').onclick=step1;
+}
+function step3(){
+  toFlow();
+  sh.innerHTML=head(3)+`<h3>آخر خطوة</h3><p class="h">«${MSG[pick.m]}» · ${EM[pick.e]}</p>
+  <label class="lbl" for="nm">اسمك على البطاقة <small>(اختياري · يطلع في صورتك بس)</small></label>
+  <input class="field" id="nm" maxlength="18" placeholder="مثال: بوخالد" value="${(pick.name||'').replace(/"/g,'')}">
+  <span class="lbl">تشجع نادي؟ <small>(اختياري · بصمتك تنضاف لبصمات جمهور ناديك)</small></span>
+  <div class="cg">${Object.keys(CL).map(k=>`<button data-c="${k}" class="${pick.c===k?'on':''}" aria-label="${CL[k]}">${crest(k,40)}</button>`).join('')}<button data-c="" class="none ${pick.c===null?'':''}">بدون</button></div>
+  <div class="cgn" id="cgn">${pick.c?CL[pick.c]:''}</div>
+  <div class="nav"><button class="btn ghost" id="b2">رجوع</button><button class="btn gold" id="save">ثبّت بصمتي</button></div><div class="err" id="err"></div>`;
+    sh.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{const c=b.dataset.c||null;pick.c=(pick.c===c)?null:c;sh.querySelectorAll('[data-c]').forEach(x=>x.classList.toggle('on',!!pick.c&&x.dataset.c===pick.c));$('cgn').textContent=pick.c?CL[pick.c]:''});
+  $('nm').oninput=e=>pick.name=e.target.value.trim().slice(0,18);
+  $('b2').onclick=step2; $('save').onclick=save;
+}
+
+/* تسجيل دخول مجهول (بدون أي بيانات شخصية) */
+async function tok(){
+  let a=ls.get('auth'), r;
+  if(EMU){const u=a&&a.u||('e'+Math.random().toString(36).slice(2,12));ls.set('auth',{u});const e=o=>btoa(JSON.stringify(o)).replace(/=+$/,'').replace(/\+/g,'-').replace(/\//g,'_');const n=Date.now()/1e3|0;
+    return {t:e({alg:'none',typ:'JWT'})+'.'+e({sub:u,user_id:u,iat:n,exp:n+3600,aud:'demo-el3',iss:'https://securetoken.google.com/demo-el3',auth_time:n,firebase:{sign_in_provider:'anonymous'}})+'.',u}}
+  if(a&&a.exp>Date.now()+60000)return a;
+  if(a&&a.r){r=await fetch('https://securetoken.googleapis.com/v1/token?key='+FB.key,{method:'POST',headers:{'content-type':'application/x-www-form-urlencoded'},body:'grant_type=refresh_token&refresh_token='+encodeURIComponent(a.r)}).then(x=>x.ok?x.json():null).catch(()=>null);
+    if(r&&r.id_token){a={t:r.id_token,r:r.refresh_token,u:r.user_id,exp:Date.now()+r.expires_in*1e3};ls.set('auth',a);return a}}
+  r=await fetch('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key='+FB.key,{method:'POST',headers:{'content-type':'application/json'},body:'{"returnSecureToken":true}'}).then(x=>x.json());
+  if(!r.idToken)throw new Error('auth');
+  a={t:r.idToken,r:r.refreshToken,u:r.localId,exp:Date.now()+r.expiresIn*1e3};ls.set('auth',a);return a;
+}
+async function save(){
+  const b=$('save'), er=$('err'); b.disabled=true; b.textContent='لحظة…'; er.textContent='';
+  try{
+    let k;
+    if(!USE_NET){
+      st.n++;st.e[pick.e]=(st.e[pick.e]||0)+1;if(pick.c)st.c[pick.c]=(st.c[pick.c]||0)+1;k=st.n;st.recs['me']={e:pick.e,m:pick.m,t:Date.now()*2,...(pick.c?{c:pick.c}:{})};
+    }else{
+      const a=await tok(), inc={'.sv':{increment:1}};
+      const rec={e:pick.e,m:pick.m,t:{'.sv':'timestamp'}}; if(pick.c)rec.c=pick.c;
+      const body={[`alam/g/${a.u}`]:rec,'alam/t/n':inc,[`alam/t/e/${pick.e}`]:inc}; if(pick.c)body[`alam/t/c/${pick.c}`]=inc;
+      let mine=null;
+      for(let tr=0;tr<6&&!mine;tr++){ // لو كثير ناس حطوا بنفس اللحظة: نعيد المحاولة
+        const r=await fetch(`${DB}/.json?${[NSQ,'auth='+a.t].filter(Boolean).join('&')}`,{method:'PATCH',body:JSON.stringify(body)});
+        mine=await getJ(`alam/g/${a.u}`);   // محفوظة (الحين أو من قبل بنفس الجهاز)
+        if(!mine){if(r.status!==401&&r.status!==409&&r.status<500)throw new Error('w'+r.status);await new Promise(z=>setTimeout(z,250+Math.random()*700*(tr+1)))}
+      }
+      if(!mine)throw new Error('busy');
+      // رقم البصمة = العدد الكلي − اللي حطوا بعدي
+      const [t,after]=await Promise.all([getJ('alam/t/n'),getJ('alam/g',`orderBy="t"&startAt=${mine.t}`)]);
+      k=Math.max(1,(t||1)-Math.max(0,Object.keys(after||{}).length-1));
+      pick.e=mine.e;pick.m=mine.m;pick.c=mine.c||null;
+      await refresh(false);
+    }
+    st.me={k,e:pick.e,m:pick.m,c:pick.c,name:pick.name}; if(USE_NET)ls.set('me',st.me);
+    render(); close_(); flyIn(k);
+    setTimeout(()=>{ov.classList.add('on');$('cta').classList.add('hide');showResult()},1900);
+  }catch(e){console.warn(e);b.disabled=false;b.textContent='ثبّت بصمتي';er.textContent='صار خلل في الاتصال، جرّب مرة ثانية'}
+}
+function flyIn(k){
+  cv.scrollIntoView({behavior:'smooth',block:'center'});
+  setTimeout(()=>{
+    const r=cv.getBoundingClientRect(), s=r.width/cv.width, cell=cellOf(k), x=cell%COLS, y=Math.floor(cell/COLS);
+    const tx=r.left+(geo.pad+(x+.5)*geo.cw)*s, ty=r.top+(geo.pad+(y+.5)*geo.chh)*s;
+    const d=document.createElement('div');d.className='fly';d.style.left=(innerWidth/2-8)+'px';d.style.top=(innerHeight-60)+'px';document.body.appendChild(d);
+    d.animate([{transform:'translate(0,0) scale(2.2)',opacity:1},{transform:`translate(${tx-innerWidth/2}px,${ty-innerHeight+60}px) scale(.6)`,opacity:1}],{duration:900,easing:'cubic-bezier(.3,.7,.2,1)',fill:'forwards'}).onfinish=()=>{d.remove();st.pop.set(cell,performance.now());if(navigator.vibrate)navigator.vibrate(30)};
+  },450);
+}
+
+/* ───── بطاقة المشاركة (صورة 4:5) ───── */
+function rtext(c,t,x,y,font,color,align='center'){c.font=font;c.fillStyle=color;c.textAlign=align;c.direction='rtl';c.fillText(t,x,y)}
+function wrap(c,t,maxW){const w=t.split(' '),L=[];let cur='';for(const s of w){const tt=cur?cur+' '+s:s;if(c.measureText(tt).width>maxW&&cur){L.push(cur);cur=s}else cur=tt}L.push(cur);return L}
+const IMG={};function img(src){return IMG[src]||(IMG[src]=new Promise(r=>{const i=new Image();i.onload=()=>r(i);i.onerror=()=>r(null);i.src=src}))}
+async function drawCard(me,W=1080,H=1350){
+  await document.fonts.load('700 40px "Readex Pro"');await document.fonts.load('500 40px "Readex Pro"');
+  const c=document.createElement('canvas');c.width=W;c.height=H;const g=c.getContext('2d');
+  const bg=g.createLinearGradient(0,0,0,H);bg.addColorStop(0,'#0d2c40');bg.addColorStop(1,'#061823');g.fillStyle=bg;g.fillRect(0,0,W,H);
+  let rg=g.createRadialGradient(W/2,0,10,W/2,0,W*.9);rg.addColorStop(0,'rgba(215,180,101,.28)');rg.addColorStop(1,'rgba(215,180,101,0)');g.fillStyle=rg;g.fillRect(0,0,W,H);
+  // إطار ذهبي مزدوج مع زوايا
+  g.strokeStyle='rgba(215,180,101,.30)';g.lineWidth=1.5;g.strokeRect(48,48,W-96,H-96);
+  g.strokeStyle='rgba(215,180,101,.85)';g.lineWidth=4;
+  for(const [x,y,dx,dy] of [[36,36,1,1],[W-36,36,-1,1],[36,H-36,1,-1],[W-36,H-36,-1,-1]]){g.beginPath();g.moveTo(x,y+dy*70);g.lineTo(x,y);g.lineTo(x+dx*70,y);g.stroke()}
+  // عنوان صغير بين خطين ذهبيين
+  g.font='600 34px "Readex Pro"';const hw=g.measureText('عيد الاتحاد الـ55').width;
+  const hl=g.createLinearGradient(0,0,W,0);hl.addColorStop(0,'rgba(215,180,101,0)');hl.addColorStop(.5,'rgba(215,180,101,.9)');hl.addColorStop(1,'rgba(215,180,101,0)');
+  g.fillStyle=hl;g.fillRect(540-hw/2-150,116,120,2);g.fillRect(540+hw/2+30,116,120,2);
+  rtext(g,'عيد الاتحاد الـ55',540,128,'600 34px "Readex Pro"','#D7B465');
+  rtext(g,'بصمة وطن',540,222,'700 92px "Readex Pro"','#FFF5E5');
+  // العلم
+  const fw=900,fh=450,fx=(W-fw)/2,fy=280; const fc=document.createElement('canvas');fc.width=fw;fc.height=fh;
+  const fg=drawFlag(fc.getContext('2d'),fw,fh,0.7,{me:me.k,n:Math.max(st.n,me.k),still:false});
+  g.save();g.shadowColor='rgba(0,0,0,.5)';g.shadowBlur=40;g.shadowOffsetY=16;g.drawImage(fc,fx,fy);g.restore();
+  if(fg.meR){const mx=fx+fg.meR.x+fg.cw/2, my=fy+fg.meR.y-fg.chh*0.4; g.font='700 30px "Readex Pro"';const tw=g.measureText('بصمتي').width+36, bh=50;
+    const bx=Math.min(Math.max(mx-tw/2,50),W-50-tw), by=my-bh-16;
+    g.save();g.shadowColor='rgba(0,0,0,.45)';g.shadowBlur=18;g.fillStyle='#f1dca4';rrect(g,bx,by,tw,bh,25);g.restore();
+    g.fillStyle='#f1dca4';g.beginPath();g.moveTo(mx-11,by+bh-1);g.lineTo(mx+11,by+bh-1);g.lineTo(mx,by+bh+13);g.closePath();g.fill();
+    rtext(g,'بصمتي',bx+tw/2,by+35,'700 30px "Readex Pro"','#1d1606')}
+  // الرقم
+  let rg2=g.createRadialGradient(540,860,10,540,880,330);rg2.addColorStop(0,'rgba(215,180,101,.13)');rg2.addColorStop(1,'rgba(215,180,101,0)');g.fillStyle=rg2;g.fillRect(0,600,W,560);
+  rtext(g,'بصمتي رقم',540,798,'500 40px "Readex Pro"','rgba(255,245,229,.75)');
+  const ng=g.createLinearGradient(300,0,780,0);ng.addColorStop(0,'#b58f3e');ng.addColorStop(.5,'#f3e2b0');ng.addColorStop(1,'#b58f3e');
+  rtext(g,fmt(me.k),540,906,'700 120px "Readex Pro"',ng);
+  // الرسالة
+  g.font='600 48px "Readex Pro"';const L=wrap(g,'«'+MSG[me.m]+'»',900);L.forEach((l,i)=>rtext(g,l,540,1002+i*62,'600 48px "Readex Pro"','#FFF5E5'));
+  // الاسم والإمارة والنادي
+  const who=[me.name,EM[me.e]?'من '+EM[me.e]:''].filter(Boolean).join(' · ');
+  const yW=1002+(L.length-1)*62+80;
+  let cw_=0; if(me.c){const ci=await img(`assets/crests/${me.c}.png`); if(ci){const [w,h]=CS[me.c],f=56/232*1.25;cw_=w*f;g.font='500 36px "Readex Pro"';const tw=g.measureText(who).width;const total=tw+20+cw_;const sx=540-total/2;g.drawImage(ci,sx,yW-h*f*0.78,w*f,h*f);rtext(g,who,sx+cw_+20+tw,yW,'500 36px "Readex Pro"','rgba(255,245,229,.8)','right')}}
+  if(!cw_)rtext(g,who,540,yW,'500 36px "Readex Pro"','rgba(255,245,229,.8)');
+  // التذييل: يمين العبارة، يسار صورة العازي وإنشاء الصفحة
+  const fl=g.createLinearGradient(0,0,W,0);fl.addColorStop(0,'rgba(215,180,101,0)');fl.addColorStop(.5,'rgba(215,180,101,.55)');fl.addColorStop(1,'rgba(215,180,101,0)');
+  g.fillStyle=fl;g.fillRect(70,H-206,W-140,1.5);
+  // تذييل متناظر في الوسط: العبارة، وتحتها توقيع (صورة · العازي · الموقع)
+  rtext(g,'حط بصمتك وكمّل العلم معانا',540,H-150,'600 32px "Readex Pro"','#D7B465','center');
+  const av=await img('assets/avatar.png'); const D=58;
+  g.font='700 28px "Readex Pro"';const wn=g.measureText('العازي').width;
+  g.font='500 24px "Readex Pro"';const ws=g.measureText('el3azy.com').width;
+  const gap=16, sep=26, pw=D+gap+wn+sep+ws+44, ph=D+12, px=540-pw/2, py=H-134;
+  g.fillStyle='rgba(255,255,255,.05)';g.strokeStyle='rgba(215,180,101,.45)';g.lineWidth=1.5;
+  g.beginPath();g.roundRect?g.roundRect(px,py,pw,ph,ph/2):g.rect(px,py,pw,ph);g.fill();g.stroke();
+  // الترتيب من اليمين: الصورة ثم الاسم ثم الموقع
+  let x=px+pw-6-D; if(av)g.drawImage(av,x,py+6,D,D);
+  x-=gap; rtext(g,'العازي',x,py+ph/2+10,'700 28px "Readex Pro"','#D7B465','right');
+  x-=wn+sep/2; g.fillStyle='rgba(215,180,101,.6)';g.beginPath();g.arc(x,py+ph/2,3,0,7);g.fill();
+  x-=sep/2; g.direction='ltr';g.textAlign='right';g.font='500 24px "Readex Pro"';g.fillStyle='rgba(255,245,229,.85)';g.fillText('el3azy.com',x,py+ph/2+9);
+  return c;
+}
+let cardBlob=null;
+async function showResult(){
+  toFlow();
+  const me=st.me;
+  sh.innerHTML=`<div class="sh"><div></div><button class="close" onclick="close_()" aria-label="أغلق">×</button></div><div class="res"><h3 style="margin-top:4px">بصمتك صارت في العلم ✨</h3><p class="h">شاركها وخلّ ربعك وأهلك يكمّلون العلم وياك</p><img class="card" id="cardImg" alt="بطاقة بصمتك"><div class="acts">
+  <button class="btn gold" id="shImg">شارك صورتك</button><button class="btn x" id="shX">انشرها في X</button><button class="btn wa" id="shWa">أرسلها واتساب</button>${USE_NET?'':'<button class="btn ghost" id="again" style="grid-column:1/-1">جرّب مرة ثانية (نسخة التجربة بس)</button>'}</div></div>`;
+  if($('again'))$('again').onclick=()=>{st.me=null;Object.assign(pick,{e:null,m:null,c:null,name:''});$('mine').classList.remove('on');$('go').textContent='حط بصمتك في العلم 🇦🇪';step1()};
+  const c=await drawCard(me); $('cardImg').src=c.toDataURL('image/jpeg',.92);
+  cardBlob=await new Promise(r=>c.toBlob(r,'image/jpeg',.92));
+  const txt=`حطيت بصمتي رقم ${fmt(me.k)} في «بصمة وطن» 🇦🇪\n«${MSG[me.m]}»\n\nحط بصمتك وخلّنا نكمّل العلم 👇\nel3azy.com/basma\n\n#عيد_الاتحاد_55`;
+  $('shX').onclick=()=>window.open('https://x.com/intent/post?text='+encodeURIComponent(txt),'_blank');
+  $('shWa').onclick=()=>window.open('https://wa.me/?text='+encodeURIComponent(txt.replace('el3azy.com/basma','https://el3azy.com/basma')),'_blank');
+  $('shImg').onclick=async()=>{
+    const f=new File([cardBlob],`basma-${me.k}.jpg`,{type:'image/jpeg'});
+    if(navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f],text:txt})}catch(e){}}
+    else{const a=document.createElement('a');a.href=URL.createObjectURL(cardBlob);a.download=f.name;a.click()}
+  };
+}
+
+/* ───── الأغنية: ملف صوت داخل الصفحة، مخفي في زر الصوت (يشتغل بس لو الملف موجود) ───── */
+(function(){
+  const SRC='assets/song.mp3', VOL=0.18, btn=$('mus');
+  const a=new Audio(); a.loop=true; a.preload='auto'; a.volume=VOL; a.playsInline=true;
+  let want=ls.get('mute')!==true, kicked=false;
+  const ui=()=>{const on=!a.paused;btn.classList.toggle('off',!on);btn.innerHTML=on?'<span class="bars"><i></i><i></i><i></i></span>':'♪'};
+  a.addEventListener('play',ui);a.addEventListener('pause',ui);
+  a.addEventListener('error',()=>{btn.style.display='none'});          // ما في ملف = ما في زر
+  a.addEventListener('canplay',()=>{btn.style.display=''},{once:true});
+  btn.style.display='none'; a.src=SRC;
+  const play=()=>{a.volume=VOL;const p=a.play();if(p)p.catch(()=>{})};
+  const kick=e=>{if(e&&e.target&&e.target.closest&&e.target.closest('#mus'))return;if(kicked)return;kicked=true;if(want)play()};
+  ['pointerdown','touchend','keydown'].forEach(ev=>document.addEventListener(ev,kick,{passive:true}));
+  btn.onclick=()=>{kicked=true;if(!a.paused){want=false;ls.set('mute',true);a.pause()}else{want=true;ls.set('mute',false);play()}};
+  ui();
+})();
+window.close_=close_; window.drawCard=drawCard; window.drawFlag=drawFlag; window.st=st;
+refresh(true);
+</script>
+</body>
+</html>
