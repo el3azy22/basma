@@ -39,6 +39,11 @@ h1{font-size:46px;line-height:1.45;margin:14px 0 0;padding:.06em 0 .12em;font-we
  background:linear-gradient(100deg,#fff 0%,var(--gold2) 40%,var(--gold) 55%,#fff 75%);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sheen 6s linear infinite}
 @keyframes sheen{to{background-position:-220% 0}}
 .sub{margin:0;color:var(--ivory);opacity:.85;font-size:17px;font-weight:600;line-height:1.7}
+.inv{display:none;margin-top:16px;padding:14px 16px;border-radius:18px;background:linear-gradient(120deg,rgba(255,255,255,.10),rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.35);align-items:center;gap:12px}
+.inv.on{display:flex;animation:up .4s}
+.inv .ic{flex:none;width:12px;height:12px;border-radius:3px;background:#fff;box-shadow:0 0 12px 3px rgba(255,255,255,.7);animation:blink 1.6s infinite}
+.inv b{display:block;font-size:16px;line-height:1.5}.inv span{display:block;font-size:13.5px;color:var(--gold2)}
+.inv button{margin-inline-start:auto;flex:none}
 .flagcard{margin:20px -4px 0;padding:14px 12px 14px;border-radius:22px;background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.02));border:1px solid var(--line);box-shadow:0 20px 60px rgba(0,0,0,.35)}
 .flagbox{position:relative;border-radius:14px;overflow:visible;background:radial-gradient(120% 120% at 50% 40%,rgba(255,255,255,.07),rgba(255,255,255,.015))}
 #flag{display:block;width:100%;height:auto;touch-action:manipulation}
@@ -149,6 +154,7 @@ section.blk{margin-top:26px}
 .res .acts{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:14px}
 .res .acts .btn:first-child{grid-column:1/-1}
 .res .acts .btn{white-space:nowrap}
+.res .acts .st{grid-column:1/-1;flex-direction:column;gap:2px;border-color:rgba(215,180,101,.5)}.res .acts .st small{font-size:11.5px;font-weight:500;color:var(--muted)}
 @media(max-width:380px){.res .acts .btn{font-size:15px;padding:15px 10px}}
 .err{color:#ff9b9b;font-size:13.5px;margin-top:10px;min-height:18px;text-align:center}
 .fly{position:fixed;z-index:60;width:16px;height:16px;border-radius:4px;background:var(--gold);box-shadow:0 0 20px 6px rgba(215,180,101,.8);pointer-events:none}
@@ -163,6 +169,8 @@ section.blk{margin-top:26px}
   </div>
   <h1>بصمة وطن</h1>
   <p class="sub">حط بصمتك وكمّل العلم معانا</p>
+
+  <div class="inv" id="inv"></div>
 
   <div class="flagcard">
     <div class="flagbox"><canvas id="flag" width="1056" height="528" aria-label="علم الإمارات من بصمات المشاركين"></canvas><div class="tip" id="tip"></div></div>
@@ -246,7 +254,7 @@ function drawFlag(ctx,W,H,t,o={}){
   const n=o.n??st.n, full=n>=CELLS, filled=full?CELLS:n, round=Math.floor(Math.max(n-1,0)/CELLS);
   const set=new Uint8Array(CELLS); for(let i=0;i<filled;i++)set[ORDER[i]]=1;
   const pad=W*0.012, cw=(W-pad*2)/COLS, chh=(H-pad*2)/ROWS, gap=Math.max(1,cw*0.12);
-  const meCell=o.me?cellOf(o.me):-1;
+  const meCell=o.me?cellOf(o.me):-1, frCell=o.friend?cellOf(o.friend):-1; let frR=null;
   ctx.clearRect(0,0,W,H);
   let meR=null; const rr=Math.min(cw,chh)*0.22;
   for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){
@@ -268,7 +276,11 @@ function drawFlag(ctx,W,H,t,o={}){
       ctx.fillStyle=`rgba(255,255,255,${0.12+Math.max(0,shade)})`;ctx.fillRect(bx+bw*.12,by+bh*.1,bw*.76,bh*.22);
     }
     if(i===meCell)meR={x:px,y:py};
+    if(i===frCell)frR={x:px,y:py};
   }
+  if(frR&&!meR||frR&&frCell!==meCell){ // بصمة اللي دعاك
+    const pulse=o.still?1:(0.5+0.5*Math.sin(t*3));ctx.save();ctx.shadowColor='rgba(255,255,255,.9)';ctx.shadowBlur=cw*2*pulse;
+    ctx.strokeStyle='#fff';ctx.lineWidth=Math.max(1.5,cw*0.16);ctx.strokeRect(frR.x-cw*0.25,frR.y-chh*0.25,cw*1.5,chh*1.5);ctx.restore()}
   if(meR){ // بصمتي فوق الكل
     const pulse=o.still?1:(0.6+0.4*Math.sin(t*4)), {x:px,y:py}=meR;
     ctx.save();ctx.shadowColor='rgba(241,220,164,1)';ctx.shadowBlur=cw*2.6*pulse;ctx.fillStyle='#f1dca4';
@@ -279,7 +291,9 @@ function drawFlag(ctx,W,H,t,o={}){
 }
 function rrect(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath();c.fill()}
 let T0=performance.now(), vis=true, geo={};
-function loop(now){ if(vis){geo=drawFlag(cx,cv.width,cv.height,(now-T0)/1000,{me:st.me&&st.me.k})} requestAnimationFrame(loop)}
+const INV=(()=>{const k=parseInt(Q.get('d')||'',10), u=Q.get('u')||'';
+  if(!(k>0&&k<1e6))return null; return {k,u:/^[A-Za-z0-9_-]{6,40}$/.test(u)?u:'',e:null,n:''}})();
+function loop(now){ if(vis){geo=drawFlag(cx,cv.width,cv.height,(now-T0)/1000,{me:st.me&&st.me.k,friend:INV&&INV.k})} requestAnimationFrame(loop)}
 new IntersectionObserver(es=>{vis=es[0].isIntersecting}).observe(cv);
 requestAnimationFrame(loop);
 
@@ -448,11 +462,19 @@ function flyIn(k){
 function rtext(c,t,x,y,font,color,align='center'){c.font=font;c.fillStyle=color;c.textAlign=align;c.direction='rtl';c.fillText(t,x,y)}
 function wrap(c,t,maxW){const w=t.split(' '),L=[];let cur='';for(const s of w){const tt=cur?cur+' '+s:s;if(c.measureText(tt).width>maxW&&cur){L.push(cur);cur=s}else cur=tt}L.push(cur);return L}
 const IMG={};function img(src){return IMG[src]||(IMG[src]=new Promise(r=>{const i=new Image();i.onload=()=>r(i);i.onerror=()=>r(null);i.src=src}))}
-async function drawCard(me,W=1080,H=1350){
+async function drawCard(me,story=false){
+  const W=1080,H=1350,SH=story?1920:H,OFF=story?285:0;
   await document.fonts.load('700 40px "Readex Pro"');await document.fonts.load('500 40px "Readex Pro"');
-  const c=document.createElement('canvas');c.width=W;c.height=H;const g=c.getContext('2d');
-  const bg=g.createLinearGradient(0,0,0,H);bg.addColorStop(0,'#0d2c40');bg.addColorStop(1,'#061823');g.fillStyle=bg;g.fillRect(0,0,W,H);
-  let rg=g.createRadialGradient(W/2,0,10,W/2,0,W*.9);rg.addColorStop(0,'rgba(215,180,101,.28)');rg.addColorStop(1,'rgba(215,180,101,0)');g.fillStyle=rg;g.fillRect(0,0,W,H);
+  const c=document.createElement('canvas');c.width=W;c.height=SH;const g=c.getContext('2d');
+  const bg=g.createLinearGradient(0,0,0,SH);bg.addColorStop(0,'#0d2c40');bg.addColorStop(1,'#061823');g.fillStyle=bg;g.fillRect(0,0,W,SH);
+  let rg=g.createRadialGradient(W/2,OFF,10,W/2,OFF,W*.9);rg.addColorStop(0,'rgba(215,180,101,.28)');rg.addColorStop(1,'rgba(215,180,101,0)');g.fillStyle=rg;g.fillRect(0,0,W,SH);
+  if(story){
+    rtext(g,'بصمتي في علم الإمارات',540,205,'700 50px "Readex Pro"','#FFF5E5');
+    g.font='700 44px "Readex Pro"';const lw=g.measureText('el3azy.com/basma').width+70;
+    g.fillStyle='#D7B465';g.beginPath();g.roundRect?g.roundRect(540-lw/2,OFF+H+70,lw,78,39):g.rect(540-lw/2,OFF+H+70,lw,78);g.fill();
+    g.fillStyle='#1d1606';g.textAlign='center';g.direction='ltr';g.fillText('el3azy.com/basma',540,OFF+H+124);
+    g.translate(0,OFF);
+  }
   // إطار ذهبي مزدوج مع زوايا
   g.strokeStyle='rgba(215,180,101,.30)';g.lineWidth=1.5;g.strokeRect(48,48,W-96,H-96);
   g.strokeStyle='rgba(215,180,101,.85)';g.lineWidth=4;
@@ -510,21 +532,31 @@ async function showResult(){
   toFlow();
   const me=st.me;
   sh.innerHTML=`<div class="sh"><div></div><button class="close" onclick="close_()" aria-label="أغلق">×</button></div><div class="res"><h3 style="margin-top:4px">بصمتك صارت في العلم ✨</h3><p class="h">شاركها وخلّ ربعك وأهلك يكمّلون العلم وياك</p><img class="card" id="cardImg" alt="بطاقة بصمتك"><div class="hint" id="saveHint"><b>اضغط مطوّلاً على البطاقة 👆 واختار «حفظ الصورة»</b><span>أو افتح الرابط في Safari أو Chrome من زر ⋯ فوق، والمشاركة تشتغل على طول</span></div><div class="acts">
-  <button class="btn gold" id="shImg">شارك صورتك</button><button class="btn x" id="shX">انشرها في X</button><button class="btn wa" id="shWa">أرسلها واتساب</button>${USE_NET?'':'<button class="btn ghost" id="again" style="grid-column:1/-1">جرّب مرة ثانية (نسخة التجربة بس)</button>'}</div></div>`;
+  <button class="btn gold" id="shImg">شارك صورتك</button><button class="btn x" id="shX">انشرها في X</button><button class="btn wa" id="shWa">أرسلها واتساب</button><button class="btn ghost st" id="shSt">حمّلها ستوري 📱 <small>سناب · واتساب · إنستغرام</small></button>${USE_NET?'':'<button class="btn ghost" id="again" style="grid-column:1/-1">جرّب مرة ثانية (نسخة التجربة بس)</button>'}</div></div>`;
   if($('again'))$('again').onclick=()=>{st.me=null;Object.assign(pick,{e:null,m:null,c:null,name:''});$('mine').classList.remove('on');$('go').textContent='حط بصمتك في العلم 🇦🇪';step1()};
-  const c=await drawCard(me); $('cardImg').src=c.toDataURL('image/jpeg',.92);
+  const c=await drawCard(me,false); $('cardImg').src=c.toDataURL('image/jpeg',.92);
   cardBlob=await new Promise(r=>c.toBlob(r,'image/jpeg',.92));
+  const au=(ls.get('auth')||{}).u, link=`https://el3azy.com/basma/?d=${me.k}`+(au&&USE_NET?`&u=${au}`:'');
   const txt=`بصمتي رقم ${fmt(me.k)} في «بصمة وطن» 🇦🇪\n«${MSG[me.m]}»\n\nحط بصمتك وخلّنا نكمّل العلم 👇\nel3azy.com/basma\n\n#عيد_الاتحاد_55`;
+  const txtInv=txt.replace('el3azy.com/basma',link);
   const file=()=>new File([cardBlob],`basma-${me.k}.jpg`,{type:'image/jpeg'});
   const canFile=()=>{try{return !!(navigator.canShare&&navigator.canShare({files:[file()]}))}catch(e){return false}};
   // في التلفون: الصورة والنص مع بعض (يختار X من قائمة المشاركة). في الكمبيوتر: نص التغريدة مع الرابط
   const tryShare=async withText=>{ // يرجع true لو انفتحت قائمة المشاركة
     if(INAPP||!canFile())return false;
-    try{await navigator.share(withText?{files:[file()],text:txt}:{files:[file()]});return true}catch(e){return !!(e&&e.name==='AbortError')}};
+    try{await navigator.share(withText?{files:[file()],text:txtInv}:{files:[file()]});return true}catch(e){return !!(e&&e.name==='AbortError')}};
   $('shX').onclick=async()=>{if(await tryShare(true))return;
     if(INAPP)saveHint();   // داخل تطبيق X: نفتح التغريدة بالنص، والصورة يحفظها ويرفقها
     window.open('https://x.com/intent/post?text='+encodeURIComponent(txt),'_blank')};
-  $('shWa').onclick=()=>window.open('https://wa.me/?text='+encodeURIComponent(txt.replace('el3azy.com/basma','https://el3azy.com/basma')),'_blank');
+  $('shWa').onclick=()=>window.open('https://wa.me/?text='+encodeURIComponent(txtInv),'_blank');
+  let storyBlob=null; const storyFile=()=>new File([storyBlob],`basma-story-${me.k}.jpg`,{type:'image/jpeg'});
+  drawCard(me,true).then(sc=>new Promise(r=>sc.toBlob(r,'image/jpeg',.92))).then(b=>storyBlob=b);
+  $('shSt').onclick=async()=>{
+    if(!storyBlob){const sc=await drawCard(me,true);storyBlob=await new Promise(r=>sc.toBlob(r,'image/jpeg',.92))}
+    let ok=false; if(!INAPP){try{if(navigator.canShare&&navigator.canShare({files:[storyFile()]})){await navigator.share({files:[storyFile()]});ok=true}}catch(e){ok=!!(e&&e.name==='AbortError')}}
+    if(ok)return;
+    if(!INAPP&&!/iPhone|iPad|Android/.test(navigator.userAgent)){const a=document.createElement('a');a.href=URL.createObjectURL(storyBlob);a.download=`basma-story-${me.k}.jpg`;document.body.appendChild(a);a.click();a.remove();return}
+    $('cardImg').src=URL.createObjectURL(storyBlob);saveHint()};   // داخل التطبيقات: نعرض نسخة الستوري عشان يضغط عليها مطوّل ويحفظها
   $('shImg').onclick=async()=>{if(await tryShare(false))return;
     if(!INAPP&&!/iPhone|iPad|Android/.test(navigator.userAgent)){const a=document.createElement('a');a.href=URL.createObjectURL(cardBlob);a.download=`basma-${me.k}.jpg`;document.body.appendChild(a);a.click();a.remove();return}
     saveHint()};
@@ -554,6 +586,13 @@ async function restoreMe(){try{
   const [t,after]=await Promise.all([getJ('alam/t/n'),getJ('alam/g',`orderBy="t"&startAt=${mine.t}`)]);
   st.me={k:Math.max(1,(t||1)-Math.max(0,Object.keys(after||{}).length-1)),e:mine.e,m:mine.m,c:mine.c||null,name:mine.n||''}; ls.set('me',st.me); render();
 }catch(e){}}
+(function(){ if(!INV)return;
+  const draw=()=>{const who=INV.n||'صديقك';
+    $('inv').innerHTML=`<i class="ic"></i><div><b>${esc(who)} حط بصمته رقم ${fmt(INV.k)}${INV.e?' من '+EM[INV.e]:''} 🇦🇪</b><span>${st.me?'بصمته تلمع جنب بصمتك في العلم':'حط بصمتك جنبه وكمّلوا العلم مع بعض'}</span></div>`;
+    $('inv').classList.add('on')};
+  draw();
+  if(INV.u&&USE_NET)getJ(`alam/g/${INV.u}`).then(r=>{if(r){INV.n=cleanName(r.n||'');INV.e=EM[r.e]?r.e:null;draw()}}).catch(()=>{});
+})();
 refresh(true).then(restoreMe).then(async()=>{try{
   if(!USE_NET||!st.me||ls.get('nameSent'))return; const nm=cleanName(st.me.name); if(!nm)return;
   const a=await tok(); const cur=await getJ(`alam/g/${a.u}`); if(!cur||cur.n){ls.set('nameSent',1);return}
