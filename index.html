@@ -326,7 +326,7 @@ function demoTick(first){
 function render(){
   $('total').innerHTML=`${fmt(st.n)}<small>بصمة</small>`;
   const done=Math.floor(st.n/CELLS), part=st.n%CELLS, p=done&&!part?100:Math.round(part/CELLS*100);
-  $('pctlbl').innerHTML=done?`العلم مكتمل ${done>1?done+' مرات':''} 🎉<b>العلم رقم ${done+1}: ${p}%</b>`:`العلم مكتمل<b>${p}%</b>`;
+  $('pctlbl').innerHTML=done?`اكتمل العلم${done>1?' '+done+' مرات':''} 🎉<b>العلم رقم ${done+1}: ${p}%</b>`:`العلم مكتمل<b>${p}%</b>`;
   $('pbar').style.width=p+'%';
   const left=Math.ceil((new Date('2026-12-02T00:00:00+04:00')-Date.now())/864e5);
   $('count').innerHTML=left>1?`<i></i>باقي ${left} أيام على العيد`:(left===1?'<i></i>باجر عيد الاتحاد':'<i></i>عيد اتحاد سعيد');
