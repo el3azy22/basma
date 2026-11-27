@@ -458,9 +458,10 @@ async function drawCard(me,W=1080,H=1350){
   const fg=drawFlag(fc.getContext('2d'),fw,fh,0.7,{me:me.k,n:Math.max(st.n,me.k),still:false});
   g.save();g.shadowColor='rgba(0,0,0,.5)';g.shadowBlur=40;g.shadowOffsetY=16;g.drawImage(fc,fx,fy);g.restore();
   if(fg.meR){const mx=fx+fg.meR.x+fg.cw/2, my=fy+fg.meR.y-fg.chh*0.4; g.font='700 30px "Readex Pro"';const tw=g.measureText('بصمتي').width+36, bh=50;
-    const bx=Math.min(Math.max(mx-tw/2,50),W-50-tw), by=my-bh-16;
+    const below=(my-bh-16)<fy+20;   // مربعه في أول صفوف العلم: الفقاعة تحت المربع عشان ما تغطي العنوان
+    const bx=Math.min(Math.max(mx-tw/2,50),W-50-tw), by=below?fy+fg.meR.y+fg.chh*1.5+16:my-bh-16;
     g.save();g.shadowColor='rgba(0,0,0,.45)';g.shadowBlur=18;g.fillStyle='#f1dca4';rrect(g,bx,by,tw,bh,25);g.restore();
-    g.fillStyle='#f1dca4';g.beginPath();g.moveTo(mx-11,by+bh-1);g.lineTo(mx+11,by+bh-1);g.lineTo(mx,by+bh+13);g.closePath();g.fill();
+    g.fillStyle='#f1dca4';g.beginPath();if(below){g.moveTo(mx-11,by+1);g.lineTo(mx+11,by+1);g.lineTo(mx,by-13)}else{g.moveTo(mx-11,by+bh-1);g.lineTo(mx+11,by+bh-1);g.lineTo(mx,by+bh+13)}g.closePath();g.fill();
     rtext(g,'بصمتي',bx+tw/2,by+35,'700 30px "Readex Pro"','#1d1606')}
   // الرقم
   let rg2=g.createRadialGradient(540,860,10,540,880,330);rg2.addColorStop(0,'rgba(215,180,101,.13)');rg2.addColorStop(1,'rgba(215,180,101,0)');g.fillStyle=rg2;g.fillRect(0,600,W,560);
