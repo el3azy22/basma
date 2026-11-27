@@ -140,6 +140,12 @@ section.blk{margin-top:26px}
 .nav .btn{flex:1}
 .nav .ghost{flex:0 0 auto}
 .res img.card{width:100%;border-radius:16px;display:block;box-shadow:0 20px 50px rgba(0,0,0,.5)}
+.hint{display:none;margin-top:12px;padding:12px 14px;border-radius:14px;background:rgba(215,180,101,.12);border:1px solid rgba(215,180,101,.45);text-align:center;line-height:1.6}
+.hint.on{display:block;animation:up .3s}
+.hint b{display:block;color:var(--gold2);font-size:15px}.hint span{font-size:12.5px;color:var(--muted)}
+.res img.card.pulse{animation:pulse 1.2s 2}
+@keyframes pulse{50%{box-shadow:0 0 0 6px rgba(215,180,101,.55),0 20px 50px rgba(0,0,0,.5)}}
+.res img.card{-webkit-touch-callout:default;user-select:auto}
 .res .acts{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:14px}
 .res .acts .btn:first-child{grid-column:1/-1}
 .res .acts .btn{white-space:nowrap}
@@ -220,7 +226,11 @@ const cleanName=v=>{v=(v||'').replace(/\s+/g,' ').trim();if(!/^[ء-يa-zA-Z ]{2,
 const esc=t=>String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>Number(n||0).toLocaleString('en-US');
 const $=id=>document.getElementById(id);
-const ls={get(k){try{return JSON.parse(localStorage.getItem('alam_'+k))}catch(e){return null}},set(k,v){try{localStorage.setItem('alam_'+k,JSON.stringify(v))}catch(e){}}};
+const CK={get(k){try{const m=document.cookie.match(new RegExp('(?:^|; )alam_'+k+'=([^;]*)'));return m?JSON.parse(decodeURIComponent(m[1])):null}catch(e){return null}},
+  set(k,v){try{document.cookie='alam_'+k+'='+encodeURIComponent(JSON.stringify(v))+';path=/;max-age=31536000;SameSite=Lax'+(location.protocol==='https:'?';Secure':'')}catch(e){}}};
+const KEEP={me:v=>v,auth:v=>v&&{r:v.r,u:v.u}};   // هذي تنحفظ بعد في كوكي، عشان لو انمسح التخزين ما يقدر يحط بصمة ثانية
+const ls={get(k){let v=null;try{v=JSON.parse(localStorage.getItem('alam_'+k))}catch(e){}if(v==null&&KEEP[k])v=CK.get(k);return v},
+  set(k,v){try{localStorage.setItem('alam_'+k,JSON.stringify(v))}catch(e){}if(KEEP[k])CK.set(k,KEEP[k](v))}};
 if(!LIVE&&!EMU){const d=document.createElement('div');d.className='demo';d.textContent='نسخة تجربة';document.body.appendChild(d)}
 
 /* ───── العلم ───── */
@@ -494,10 +504,12 @@ async function drawCard(me,W=1080,H=1350){
   return c;
 }
 let cardBlob=null;
+const INAPP=/Twitter|FBAN|FBAV|Instagram|Snapchat|TikTok|musical_ly|Line\/|LinkedInApp|GSA\//i.test(navigator.userAgent)||(/iPhone|iPad/.test(navigator.userAgent)&&!/Safari\//.test(navigator.userAgent));
+function saveHint(){const h=$('saveHint');if(!h)return;h.classList.add('on');const im=$('cardImg');im.classList.remove('pulse');void im.offsetWidth;im.classList.add('pulse');im.scrollIntoView({behavior:'smooth',block:'center'})}
 async function showResult(){
   toFlow();
   const me=st.me;
-  sh.innerHTML=`<div class="sh"><div></div><button class="close" onclick="close_()" aria-label="أغلق">×</button></div><div class="res"><h3 style="margin-top:4px">بصمتك صارت في العلم ✨</h3><p class="h">شاركها وخلّ ربعك وأهلك يكمّلون العلم وياك</p><img class="card" id="cardImg" alt="بطاقة بصمتك"><div class="acts">
+  sh.innerHTML=`<div class="sh"><div></div><button class="close" onclick="close_()" aria-label="أغلق">×</button></div><div class="res"><h3 style="margin-top:4px">بصمتك صارت في العلم ✨</h3><p class="h">شاركها وخلّ ربعك وأهلك يكمّلون العلم وياك</p><img class="card" id="cardImg" alt="بطاقة بصمتك"><div class="hint" id="saveHint"><b>اضغط مطوّلاً على البطاقة 👆 واختار «حفظ الصورة»</b><span>أو افتح الرابط في Safari أو Chrome من زر ⋯ فوق، والمشاركة تشتغل على طول</span></div><div class="acts">
   <button class="btn gold" id="shImg">شارك صورتك</button><button class="btn x" id="shX">انشرها في X</button><button class="btn wa" id="shWa">أرسلها واتساب</button>${USE_NET?'':'<button class="btn ghost" id="again" style="grid-column:1/-1">جرّب مرة ثانية (نسخة التجربة بس)</button>'}</div></div>`;
   if($('again'))$('again').onclick=()=>{st.me=null;Object.assign(pick,{e:null,m:null,c:null,name:''});$('mine').classList.remove('on');$('go').textContent='حط بصمتك في العلم 🇦🇪';step1()};
   const c=await drawCard(me); $('cardImg').src=c.toDataURL('image/jpeg',.92);
@@ -506,14 +518,16 @@ async function showResult(){
   const file=()=>new File([cardBlob],`basma-${me.k}.jpg`,{type:'image/jpeg'});
   const canFile=()=>{try{return !!(navigator.canShare&&navigator.canShare({files:[file()]}))}catch(e){return false}};
   // في التلفون: الصورة والنص مع بعض (يختار X من قائمة المشاركة). في الكمبيوتر: نص التغريدة مع الرابط
-  $('shX').onclick=async()=>{if(canFile()){try{await navigator.share({files:[file()],text:txt});return}catch(e){if(e&&e.name==='AbortError')return}}
+  const tryShare=async withText=>{ // يرجع true لو انفتحت قائمة المشاركة
+    if(INAPP||!canFile())return false;
+    try{await navigator.share(withText?{files:[file()],text:txt}:{files:[file()]});return true}catch(e){return !!(e&&e.name==='AbortError')}};
+  $('shX').onclick=async()=>{if(await tryShare(true))return;
+    if(INAPP)saveHint();   // داخل تطبيق X: نفتح التغريدة بالنص، والصورة يحفظها ويرفقها
     window.open('https://x.com/intent/post?text='+encodeURIComponent(txt),'_blank')};
   $('shWa').onclick=()=>window.open('https://wa.me/?text='+encodeURIComponent(txt.replace('el3azy.com/basma','https://el3azy.com/basma')),'_blank');
-  $('shImg').onclick=async()=>{
-    const f=new File([cardBlob],`basma-${me.k}.jpg`,{type:'image/jpeg'});
-    if(navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f],text:txt})}catch(e){}}
-    else{const a=document.createElement('a');a.href=URL.createObjectURL(cardBlob);a.download=f.name;a.click()}
-  };
+  $('shImg').onclick=async()=>{if(await tryShare(false))return;
+    if(!INAPP&&!/iPhone|iPad|Android/.test(navigator.userAgent)){const a=document.createElement('a');a.href=URL.createObjectURL(cardBlob);a.download=`basma-${me.k}.jpg`;document.body.appendChild(a);a.click();a.remove();return}
+    saveHint()};
 }
 
 /* ───── السلام الوطني (تسجيل ملكية عامة): مرة وحدة مع أول لمسة، وزر الصوت يعيده أو يوقفه. يشتغل بس لو الملف موجود ───── */
@@ -535,7 +549,12 @@ async function showResult(){
   ui();
 })();
 window.close_=close_; window.drawCard=drawCard; window.drawFlag=drawFlag; window.st=st;
-refresh(true).then(async()=>{try{
+async function restoreMe(){try{
+  if(!USE_NET||st.me||!ls.get('auth'))return; const a=await tok(); const mine=await getJ(`alam/g/${a.u}`); if(!mine)return;
+  const [t,after]=await Promise.all([getJ('alam/t/n'),getJ('alam/g',`orderBy="t"&startAt=${mine.t}`)]);
+  st.me={k:Math.max(1,(t||1)-Math.max(0,Object.keys(after||{}).length-1)),e:mine.e,m:mine.m,c:mine.c||null,name:mine.n||''}; ls.set('me',st.me); render();
+}catch(e){}}
+refresh(true).then(restoreMe).then(async()=>{try{
   if(!USE_NET||!st.me||ls.get('nameSent'))return; const nm=cleanName(st.me.name); if(!nm)return;
   const a=await tok(); const cur=await getJ(`alam/g/${a.u}`); if(!cur||cur.n){ls.set('nameSent',1);return}
   const r=await fetch(`${DB}/alam/g/${a.u}/n.json?${[NSQ,'auth='+a.t].filter(Boolean).join('&')}`,{method:'PUT',body:JSON.stringify(nm)}); if(r.ok)ls.set('nameSent',1);
