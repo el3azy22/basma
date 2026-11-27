@@ -4,18 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>بصمة وطن · عيد الاتحاد الـ55</title>
-<meta name="description" content="حط بصمتك مربع في علم الإمارات، وخلّنا نكمّل العلم مع بعض في عيد الاتحاد الـ55.">
+<meta name="description" content="حط بصمتك في علم الإمارات، وخلّنا نكمّل العلم مع بعض في عيد الاتحاد الـ55.">
 <meta name="theme-color" content="#071D2B">
 <meta property="og:type" content="website">
 <meta property="og:title" content="بصمة وطن · حط بصمتك في علم الإمارات">
-<meta property="og:description" content="كل بصمة مربع.. وكلنا نكمّل العلم مع بعض في عيد الاتحاد الـ55 🇦🇪">
+<meta property="og:description" content="حط بصمتك في علم الإمارات، وخلّنا نكمّل العلم مع بعض في عيد الاتحاد الـ55 🇦🇪">
 <meta property="og:url" content="https://el3azy.com/basma/">
 <meta property="og:image" content="https://el3azy.com/basma/og.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="بصمة وطن · حط بصمتك في علم الإمارات">
-<meta name="twitter:description" content="كل بصمة مربع.. وكلنا نكمّل العلم مع بعض في عيد الاتحاد الـ55 🇦🇪">
+<meta name="twitter:description" content="حط بصمتك في علم الإمارات، وخلّنا نكمّل العلم مع بعض في عيد الاتحاد الـ55 🇦🇪">
 <meta name="twitter:image" content="https://el3azy.com/basma/og.jpg">
 <link rel="icon" type="image/png" href="icon.png">
 <link rel="apple-touch-icon" href="icon.png">
@@ -166,7 +166,7 @@ section.blk{margin-top:26px}
     </div>
     <div class="bar"><div id="pbar"></div></div>
     <div class="ticker" id="ticker"></div>
-    <div class="mine" id="mine"><div><b id="mineNo"></b><span>مربعك يلمع في العلم ✨</span></div></div>
+    <div class="mine" id="mine"><div><b id="mineNo"></b><span>بصمتك تلمع في العلم ✨</span></div></div>
   </div>
 
   <div class="ov" id="ov"><div class="sheet" id="sheet"></div></div>
@@ -279,7 +279,7 @@ cv.addEventListener('click',ev=>{
   const cx_=Math.floor((x-geo.pad)/geo.cw), cy_=Math.floor((y-geo.pad)/geo.chh); if(cx_<0||cy_<0||cx_>=COLS||cy_>=ROWS)return;
   const cell=cy_*COLS+cx_, pos=ORDER.indexOf(cell), tip=$('tip');
   const filled=Math.min(st.n,CELLS);
-  if(pos>=filled){tip.innerHTML='هالمربع ينتظر بصمتك 👇'}
+  if(pos>=filled){tip.innerHTML='هني مكان بصمتك 👇'}
   else{
     let rank=pos+1; while(rank+CELLS<=st.n)rank+=CELLS;   // آخر بصمة وقعت على هالمربع
     const rec=st.byRank&&st.byRank[rank];
