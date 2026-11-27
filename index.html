@@ -588,7 +588,7 @@ async function restoreMe(){try{
 }catch(e){}}
 (function(){ if(!INV)return;
   const draw=()=>{const who=INV.n||'صديقك';
-    $('inv').innerHTML=`<i class="ic"></i><div><b>${esc(who)} حط بصمته رقم ${fmt(INV.k)}${INV.e?' من '+EM[INV.e]:''} 🇦🇪</b><span>${st.me?'بصمته تلمع جنب بصمتك في العلم':'حط بصمتك جنبه وكمّلوا العلم مع بعض'}</span></div>`;
+    $('inv').innerHTML=`<i class="ic"></i><div><b>${esc(who)} حط بصمته رقم ${fmt(INV.k)}${INV.e?' من '+EM[INV.e]:''} 🇦🇪</b><span>${st.me?'بصمته تلمع عدال بصمتك في العلم':'حط بصمتك عداله وكمّلوا العلم مع بعض'}</span></div>`;
     $('inv').classList.add('on')};
   draw();
   if(INV.u&&USE_NET)getJ(`alam/g/${INV.u}`).then(r=>{if(r){INV.n=cleanName(r.n||'');INV.e=EM[r.e]?r.e:null;draw()}}).catch(()=>{});
