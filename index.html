@@ -46,6 +46,9 @@ h1{font-size:46px;line-height:1.45;margin:14px 0 0;padding:.06em 0 .12em;font-we
 .inv button{margin-inline-start:auto;flex:none}
 .done{display:none;align-items:center;gap:12px;margin:-2px 0 12px;padding:10px 12px;border-radius:14px;background:rgba(0,132,61,.10);border:1px solid rgba(46,224,122,.3)}
 .done.on{display:flex}.done canvas{width:84px;height:42px;flex:none}.done #miniMap{width:52px;height:42px}.done b{display:block;font-size:14.5px}.done span{display:block;font-size:12px;color:var(--muted);line-height:1.5}
+.trio{display:none;justify-content:center;gap:8px;margin-top:10px}.trio.on{display:flex}
+.trio i{font-style:normal;font-size:12.5px;font-weight:600;padding:5px 12px;border-radius:99px;border:1px solid var(--line);color:var(--muted);transition:.3s}
+.trio i.on{color:var(--gold2);border-color:rgba(215,180,101,.6);background:rgba(215,180,101,.12)}
 .flagcard{margin:20px -4px 0;padding:14px 12px 14px;border-radius:22px;background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.02));border:1px solid var(--line);box-shadow:0 20px 60px rgba(0,0,0,.35)}
 .flagbox{position:relative;border-radius:14px;overflow:visible;background:radial-gradient(120% 120% at 50% 40%,rgba(255,255,255,.07),rgba(255,255,255,.015))}
 #flag{display:block;width:100%;height:auto;touch-action:manipulation}
@@ -177,6 +180,7 @@ section.blk{margin-top:26px}
   <div class="flagcard">
     <div class="done" id="done"><canvas id="miniFlag" width="240" height="120"></canvas><canvas id="miniMap" width="150" height="120" style="display:none"></canvas><div><b id="doneT">العلم الأول اكتمل ✅</b><span id="doneS"></span></div></div>
     <div class="flagbox"><canvas id="flag" width="1056" height="528" aria-label="علم الإمارات من بصمات المشاركين"></canvas><div class="tip" id="tip"></div></div>
+    <div class="trio" id="trio"><i>العلم ✅</i><i>الخريطة ✅</i><i>الـ55 ✅</i></div>
     <div class="stats">
       <div class="big" id="total">0<small>بصمة</small></div>
       <div class="pct" id="pctlbl">العلم مكتمل<b id="pct">0%</b></div>
@@ -262,19 +266,22 @@ function mkShape(D,key,base,pk,seed){const N=D.cells.length;
   const K=D.cells.map(id=>{const x=id%D.cols,y=Math.floor(id/D.cols);return x<xr?'r':(y<y1?'g':(y<y2?'w':'k'))});
   return {...D,key,base,pk,N,ORD,K}}
 const SMAP=mkShape(MAP,'map',CELLS,100000,971), MAPN=SMAP.N, SNUM=mkShape(NUM,'num',CELLS+MAPN,200000,55);
-const shapeOf=rank=>rank<=CELLS?null:(rank<=CELLS+MAPN?SMAP:SNUM);      // بعد الـ55 يعيد الـ55
+const shapeOf=rank=>rank<=CELLS?null:(rank<=CELLS+MAPN?SMAP:SNUM);
 const jOf=(S,rank)=>S.ORD[(rank-S.base-1)%S.N];
-const popKey=rank=>{const S=shapeOf(rank);return S?S.pk+jOf(S,rank):ORDER[rank-1]};
+const popKey=rank=>{if(rank>CELLS+MAPN+SNUM.N)return -1;const S=shapeOf(rank);return S?S.pk+jOf(S,rank):ORDER[rank-1]};
 const STAGE=()=>st.n<CELLS?null:(st.n<CELLS+MAPN?SMAP:SNUM);
 const MAPMODE=()=>st.n>=CELLS;
 const WORD={map:'الخريطة',num:'الـ55'};
+const FIN=CELLS+MAPN+SNUM.N;               // اكتملت اللوحة: العلم + الخريطة + الـ55
+const HONOR=rank=>rank>FIN;                // بعد اللوحة: سجل الشرف
+const FINAL=()=>st.n>=FIN;
 const st={n:0,e:{},c:{},recs:{},lastT:0,me:USE_NET?ls.get('me'):null,pop:new Map()};
 const cv=$('flag'),cx=cv.getContext('2d');
 function drawFlag(ctx,W,H,t,o={}){
   const n=o.n??st.n, full=n>=CELLS, filled=full?CELLS:n, round=Math.floor(Math.max(n-1,0)/CELLS);
   const set=new Uint8Array(CELLS); for(let i=0;i<filled;i++)set[ORDER[i]]=1;
   const pad=W*0.012, cw=(W-pad*2)/COLS, chh=(H-pad*2)/ROWS, gap=Math.max(1,cw*0.12);
-  const meCell=o.me?cellOf(o.me):-1, frCell=o.friend?cellOf(o.friend):-1; let frR=null;
+  const meCell=o.me&&o.me<=CELLS?cellOf(o.me):-1, frCell=o.friend&&o.friend<=CELLS?cellOf(o.friend):-1; let frR=null;
   ctx.clearRect(0,0,W,H);
   let meR=null; const rr=Math.min(cw,chh)*0.22;
   for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){
@@ -342,8 +349,13 @@ let T0=performance.now(), vis=true, geo={};
 const INV=(()=>{const k=parseInt(Q.get('d')||'',10), u=Q.get('u')||'';
   if(!(k>0&&k<1e6))return null; return {k,u:/^[A-Za-z0-9_-]{6,40}$/.test(u)?u:'',e:null,n:''}})();
 function loop(now){ if(vis){const o={me:st.me&&st.me.k,friend:INV&&INV.k},t=(now-T0)/1000;
-  const S=STAGE(); if(S){const h=Math.round(cv.width*S.rows/S.cols);if(cv.height!==h)cv.height=h;geo=drawShape(S,cx,cv.width,cv.height,t,o)}
-  else{if(cv.height!==528)cv.height=528;geo=drawFlag(cx,cv.width,cv.height,t,o)}} requestAnimationFrame(loop)}
+  if(FINAL()){if(cv.height!==528)cv.height=528;const ph=Math.floor(t/4.5)%3, f=(t%4.5);
+    cx.save();cx.globalAlpha=Math.min(1,f/0.6,(4.5-f)/0.6);
+    geo=ph===0?drawFlag(cx,cv.width,cv.height,t,{...o,n:CELLS}):drawShape(ph===1?SMAP:SNUM,cx,cv.width,cv.height,t,{...o,n:ph===1?CELLS+MAPN:FIN});
+    cx.restore();geo.final=true;
+    if(geo.ph!==ph){document.querySelectorAll('#trio i').forEach((e,i)=>e.classList.toggle('on',i===ph))}geo.ph=ph}
+  else{const S=STAGE(); if(S){const h=Math.round(cv.width*S.rows/S.cols);if(cv.height!==h)cv.height=h;geo=drawShape(S,cx,cv.width,cv.height,t,o)}
+  else{if(cv.height!==528)cv.height=528;geo=drawFlag(cx,cv.width,cv.height,t,o)}}} requestAnimationFrame(loop)}
 new IntersectionObserver(es=>{vis=es[0].isIntersecting}).observe(cv);
 requestAnimationFrame(loop);
 
@@ -351,6 +363,8 @@ requestAnimationFrame(loop);
 cv.addEventListener('click',ev=>{
   const r=cv.getBoundingClientRect(), sx=cv.width/r.width, x=(ev.clientX-r.left)*sx, y=(ev.clientY-r.top)*sx;
   const tip=$('tip'); let pos,filled,rank;
+  if(geo.final){tip.innerHTML=['العلم ✅ اكتمل بـ1,152 بصمة','خريطة الإمارات ✅ اكتملت بـ1,092 بصمة',`الـ55 ✅ اكتمل بـ${fmt(SNUM.N)} بصمة`][geo.ph];
+    tip.style.left=Math.min(Math.max(ev.clientX-r.left,110),r.width-110)+'px';tip.style.top=(ev.clientY-r.top-8)+'px';tip.classList.add('on');clearTimeout(tip._t);tip._t=setTimeout(()=>tip.classList.remove('on'),2600);return}
   if(geo.shape){const S=geo.shape, mx=Math.floor((x-geo.ox)/geo.cw), my=Math.floor((y-geo.oy)/geo.chh), j=S.cells.indexOf(my*S.cols+mx); if(j<0||mx<0||mx>=S.cols)return;
     pos=S.ORD.indexOf(j); filled=Math.max(0,Math.min(st.n-S.base,S.N)); rank=S.base+pos+1; if(S===SNUM)while(rank+S.N<=st.n)rank+=S.N}
   else{const cx_=Math.floor((x-geo.pad)/geo.cw), cy_=Math.floor((y-geo.pad)/geo.chh); if(cx_<0||cy_<0||cx_>=COLS||cy_>=ROWS)return;
@@ -404,6 +418,16 @@ function render(){
   $('total').innerHTML=`${fmt(st.n)}<small>بصمة</small>`;
   let p;
   if(!MAPMODE()){p=Math.floor(st.n/CELLS*100);$('pctlbl').innerHTML=`العلم مكتمل<b dir="ltr">${p}%</b>`}
+  else if(FINAL()){p=100;const h=st.n-FIN;
+    $('pctlbl').innerHTML=`اكتملت اللوحة 🎉<b>${h?'سجل الشرف: '+fmt(h):'3 من 3'}</b>`;
+    if($('done').dataset.st!=='fin'){$('done').dataset.st='fin';$('done').classList.add('on');$('trio').classList.add('on');
+      $('sub').textContent='شكراً لكل من بصم 🇦🇪';
+      $('doneT').textContent='اكتملت «بصمة وطن» 🇦🇪';
+      $('doneS').textContent=`${fmt(FIN)} بصمة كمّلت العلم وخريطة الإمارات والـ55.. وكل بصمة يديدة تنضاف لسجل الشرف لين عيد الاتحاد`;
+      $('miniMap').style.display='';if(!st.me)$('go').textContent='حط بصمتك في سجل الشرف 🇦🇪';
+      $('flag').setAttribute('aria-label','لوحة بصمة وطن: العلم والخريطة والـ55')}
+    drawFlag($('miniFlag').getContext('2d'),240,120,0,{n:CELLS,still:true,me:st.me&&st.me.k<=CELLS?st.me.k:0});
+    drawShape(SMAP,$('miniMap').getContext('2d'),150,120,0,{n:CELLS+MAPN,still:true,me:st.me&&shapeOf(st.me.k)===SMAP?st.me.k:0})}
   else{const S=STAGE();
     if(S===SMAP){const m=st.n-CELLS;p=Math.floor(m/MAPN*100);$('pctlbl').innerHTML=`الخريطة مكتملة<b dir="ltr">${p}%</b>`}
     else{const m=st.n-SNUM.base, done=Math.floor(m/SNUM.N);p=done&&!(m%SNUM.N)?100:Math.floor((m%SNUM.N)/SNUM.N*100);
@@ -423,7 +447,7 @@ function render(){
   // الأندية بترتيب ثابت
   $('clubs').innerHTML=Object.keys(CL).map(k=>`<div class="cl"><span class="cr">${crest(k,24)}</span><span class="nm">${CL[k]}</span><span class="n">${fmt(st.c[k]||0)}</span></div>`).join('');
   // بصمتي
-  if(st.me){$('mine').classList.add('on');$('mineNo').textContent=`بصمتك رقم ${fmt(st.me.k)}`;$('mine').querySelector('span').textContent=shapeOf(st.me.k)?`بصمتك تلمع في ${WORD[shapeOf(st.me.k).key]} ✨`:'بصمتك تلمع في العلم ✨';$('go').textContent='شارك بطاقتك 🇦🇪'}
+  if(st.me){$('mine').classList.add('on');$('mineNo').textContent=`بصمتك رقم ${fmt(st.me.k)}`;$('mine').querySelector('span').textContent=HONOR(st.me.k)?'بصمتك في سجل الشرف ✨':shapeOf(st.me.k)?`بصمتك تلمع في ${WORD[shapeOf(st.me.k).key]} ✨`:'بصمتك تلمع في العلم ✨';$('go').textContent='شارك بطاقتك 🇦🇪'}
 }
 /* شريط آخر البصمات */
 let ti=0;
@@ -511,6 +535,7 @@ async function save(){
   }catch(e){console.warn(e);b.disabled=false;b.textContent='ثبّت بصمتي';er.textContent='صار خلل في الاتصال، جرّب مرة ثانية'}
 }
 function flyIn(k){
+  if(HONOR(k)){cv.scrollIntoView({behavior:'smooth',block:'center'});if(navigator.vibrate)navigator.vibrate(30);return}
   cv.scrollIntoView({behavior:'smooth',block:'center'});
   setTimeout(()=>{
     const S=shapeOf(k), r=cv.getBoundingClientRect(), s=r.width/cv.width, id=S?S.cells[jOf(S,k)]:cellOf(k), cols=S?S.cols:COLS, x=id%cols, y=Math.floor(id/cols);
@@ -549,9 +574,19 @@ async function drawCard(me,story=false){
   rtext(g,'عيد الاتحاد الـ55',540,128,'600 34px "Readex Pro"','#D7B465');
   rtext(g,'بصمة وطن',540,222,'700 92px "Readex Pro"','#FFF5E5');
   // العلم
-  const SS=shapeOf(me.k), inMap=!!SS, fh=450, fw=SS?Math.min(900,Math.round(fh*SS.cols/SS.rows)):900, fx=(W-fw)/2, fy=280; const fc=document.createElement('canvas');fc.width=fw;fc.height=fh;
+  const HON=HONOR(me.k), SS=HON?null:shapeOf(me.k), inMap=!!SS, fh=450, fw=SS?Math.min(900,Math.round(fh*SS.cols/SS.rows)):900, fx=(W-fw)/2, fy=280; const fc=document.createElement('canvas');fc.width=fw;fc.height=fh;
   const fg=SS?drawShape(SS,fc.getContext('2d'),fw,fh,0.7,{me:me.k,n:Math.max(st.n,me.k),still:false}):drawFlag(fc.getContext('2d'),fw,fh,0.7,{me:me.k,n:Math.max(st.n,me.k),still:false});
-  g.save();g.shadowColor='rgba(0,0,0,.5)';g.shadowBlur=40;g.shadowOffsetY=16;g.drawImage(fc,fx,fy);g.restore();
+  if(HON){ // سجل الشرف: الأشكال الثلاثة مكتملة جنب بعض
+    const tri=document.createElement('canvas');tri.width=900;tri.height=450;const tg=tri.getContext('2d');
+    const pan=(fn,x,w,h)=>{const pc=document.createElement('canvas');pc.width=w;pc.height=h;fn(pc.getContext('2d'),w,h);tg.drawImage(pc,x,(380-h)/2+10)};
+    pan((c,w,h)=>drawShape(SNUM,c,w,h,0.7,{n:FIN,still:true}),0,290,190);
+    pan((c,w,h)=>drawShape(SMAP,c,w,h,0.7,{n:CELLS+MAPN,still:true}),305,290,232);
+    pan((c,w,h)=>drawFlag(c,w,h,0.7,{n:CELLS,still:true}),610,290,145);
+    tg.font='700 30px "Readex Pro"';const lw=tg.measureText('سجل الشرف').width+48;tg.fillStyle='rgba(215,180,101,.16)';tg.strokeStyle='rgba(215,180,101,.7)';tg.lineWidth=1.5;
+    tg.beginPath();tg.roundRect?tg.roundRect(450-lw/2,392,lw,50,25):tg.rect(450-lw/2,392,lw,50);tg.fill();tg.stroke();
+    tg.fillStyle='#f1dca4';tg.textAlign='center';tg.direction='rtl';tg.fillText('سجل الشرف',450,428);
+    g.drawImage(tri,90,fy);fg.meR=null}
+  else{g.save();g.shadowColor='rgba(0,0,0,.5)';g.shadowBlur=40;g.shadowOffsetY=16;g.drawImage(fc,fx,fy);g.restore()}
   if(fg.meR){const mx=fx+fg.meR.x+fg.cw/2, my=fy+fg.meR.y-fg.chh*0.4; g.font='700 30px "Readex Pro"';const tw=g.measureText('بصمتي').width+36, bh=50;
     const below=(my-bh-16)<fy+20;   // مربعه في أول صفوف العلم: الفقاعة تحت المربع عشان ما تغطي العنوان
     const bx=Math.min(Math.max(mx-tw/2,50),W-50-tw), by=below?fy+fg.meR.y+fg.chh*1.5+16:my-bh-16;
@@ -574,7 +609,7 @@ async function drawCard(me,story=false){
   const fl=g.createLinearGradient(0,0,W,0);fl.addColorStop(0,'rgba(215,180,101,0)');fl.addColorStop(.5,'rgba(215,180,101,.55)');fl.addColorStop(1,'rgba(215,180,101,0)');
   g.fillStyle=fl;g.fillRect(70,H-206,W-140,1.5);
   // تذييل متناظر في الوسط: العبارة، وتحتها توقيع (صورة · العازي · الموقع)
-  rtext(g,SS?`حط بصمتك وكمّل ${WORD[SS.key]} معانا`:'حط بصمتك وكمّل العلم معانا',540,H-150,'600 32px "Readex Pro"','#D7B465','center');
+  rtext(g,HON?'حط بصمتك في «بصمة وطن»':SS?`حط بصمتك وكمّل ${WORD[SS.key]} معانا`:'حط بصمتك وكمّل العلم معانا',540,H-150,'600 32px "Readex Pro"','#D7B465','center');
   const av=await img('assets/avatar.png'); const D=58;
   g.font='700 28px "Readex Pro"';const wn=g.measureText('العازي').width;
   g.font='500 24px "Readex Pro"';const ws=g.measureText('el3azy.com').width;
@@ -608,7 +643,7 @@ async function showResult(){
   const c=await drawCard(me,false); $('cardImg').src=c.toDataURL('image/jpeg',.92);
   cardBlob=await new Promise(r=>c.toBlob(r,'image/jpeg',.92));
   const au=ls.get('cardOf')||(ls.get('auth')||{}).u, link=`https://el3azy.com/basma/?d=${me.k}`+(au&&USE_NET?`&u=${au}`:'');
-  const txt=`بصمتي رقم ${fmt(me.k)} في «بصمة وطن» 🇦🇪\n«${MSG[me.m]}»\n\nحط بصمتك وخلّنا نكمّل ${shapeOf(me.k)===SMAP?'خريطة الإمارات':(shapeOf(me.k)?'الـ55':'العلم')} 👇\nel3azy.com/basma\n\n#عيد_الاتحاد_55`;
+  const txt=`بصمتي رقم ${fmt(me.k)} في «بصمة وطن» 🇦🇪\n«${MSG[me.m]}»\n\n${HONOR(me.k)?'حط بصمتك في سجل الشرف':'حط بصمتك وخلّنا نكمّل '+(shapeOf(me.k)===SMAP?'خريطة الإمارات':(shapeOf(me.k)?'الـ55':'العلم'))} 👇\nel3azy.com/basma\n\n#عيد_الاتحاد_55`;
   const txtInv=txt.replace('el3azy.com/basma',link);
   const file=()=>new File([cardBlob],`basma-${me.k}.jpg`,{type:'image/jpeg'});
   const canFile=()=>{try{return !!(navigator.canShare&&navigator.canShare({files:[file()]}))}catch(e){return false}};
@@ -667,7 +702,7 @@ async function restoreMe(){try{
 }catch(e){}}
 (function(){ if(!INV)return;
   const draw=()=>{const who=INV.n||'صديقك';
-    $('inv').innerHTML=`<i class="ic"></i><div><b>${esc(who)} حط بصمته رقم ${fmt(INV.k)}${INV.e?' من '+EM[INV.e]:''} 🇦🇪</b><span>${st.me?'بصمته تلمع عدال بصمتك':`حط بصمتك عداله وكمّلوا ${STAGE()?WORD[STAGE().key]:'العلم'} مع بعض`}</span></div>`;
+    $('inv').innerHTML=`<i class="ic"></i><div><b>${esc(who)} حط بصمته رقم ${fmt(INV.k)}${INV.e?' من '+EM[INV.e]:''} 🇦🇪</b><span>${st.me?'بصمته تلمع عدال بصمتك':(FINAL()?'حط بصمتك عداله في سجل الشرف':`حط بصمتك عداله وكمّلوا ${STAGE()?WORD[STAGE().key]:'العلم'} مع بعض`)}</span></div>`;
     $('inv').classList.add('on')};
   draw();
   if(INV.u&&USE_NET)getJ(`alam/g/${INV.u}`).then(r=>{if(r){INV.n=cleanName(r.n||'');INV.e=EM[r.e]?r.e:null;draw()}}).catch(()=>{});
