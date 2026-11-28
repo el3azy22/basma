@@ -170,6 +170,8 @@ section.blk{margin-top:26px}
 .res img.card.pulse{animation:pulse 1.2s 2}
 @keyframes pulse{50%{box-shadow:0 0 0 6px rgba(215,180,101,.55),0 20px 50px rgba(0,0,0,.5)}}
 .res img.card{-webkit-touch-callout:default;user-select:auto}
+.xgo{margin:0 0 12px;padding:14px;border-radius:16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.3);text-align:center;animation:up .3s}
+.xgo b{display:block;font-size:16px}.xgo span{display:block;font-size:12.5px;color:var(--muted);margin:2px 0 10px}.xgo .btn{width:100%}
 .res .acts{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:14px}
 .res .acts .btn:first-child{grid-column:1/-1}
 .res .acts .btn{white-space:nowrap}
@@ -485,7 +487,6 @@ function render(){
   else if(FINAL()){p=100;const h=st.n-FIN;
     $('pctlbl').innerHTML=`اكتملت اللوحة 🎉<b>العلم · الخريطة · الـ55</b>`;
     if($('done').dataset.st!=='fin'){$('done').dataset.st='fin';$('done').classList.add('on');$('trio').classList.add('on');
-      $('sub').textContent='شكراً لكل من بصم 🇦🇪';
       $('doneT').textContent='اكتملت «بصمة وطن» 🇦🇪';
       $('doneS').textContent=`${fmt(FIN)} بصمة كمّلت العلم وخريطة الإمارات والـ55.. وتقدر تحط بصمتك وتنضاف للعدد لين عيد الاتحاد`;
       $('miniMap').style.display='';if(!st.me)$('go').textContent='حط بصمتك 🇦🇪';
@@ -498,7 +499,6 @@ function render(){
     if($('done').dataset.st!==S.key){$('done').dataset.st=S.key;$('done').classList.add('on');
       const prev=['العلم',...SHAPES.slice(0,SHAPES.indexOf(S)).map(x=>WORD[x.key])];
       const list=prev.length>1?prev.slice(0,-1).join(' و')+' و'+prev[prev.length-1]:prev[0];
-      $('sub').textContent=`اكتمل ${list}.. الحين نكمّل ${FULLN[S.key]}`;
       if(!st.me)$('go').textContent=`حط بصمتك في ${WORD[S.key]} 🇦🇪`;
       $('flag').setAttribute('aria-label',`${FULLN[S.key]} من بصمات المشاركين`);
       buildCar(S)}
@@ -690,8 +690,8 @@ async function drawCard(me,story=false){
 let cardBlob=null;
 const INAPP=/Twitter|FBAN|FBAV|Instagram|Snapchat|TikTok|musical_ly|Line\/|LinkedInApp|GSA\//i.test(navigator.userAgent)||(/iPhone|iPad/.test(navigator.userAgent)&&!/Safari\//.test(navigator.userAgent));
 function myCardLink(){const u=ls.get('cardOf')||(ls.get('auth')||{}).u;return 'https://el3azy.com/basma/'+(u?'?me='+u:'')}
-function openExternal(){
-  const url=myCardLink(), ua=navigator.userAgent, bare=url.replace(/^https:\/\//,'');
+function openExternal(extra=''){
+  const url=myCardLink()+(extra&&myCardLink().includes('?')?extra:extra.replace('&','?')), ua=navigator.userAgent, bare=url.replace(/^https:\/\//,'');
   if(/iPhone|iPad/.test(ua))location.href='x-safari-https://'+bare;
   else if(/Android/.test(ua))location.href='intent://'+bare+'#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url='+encodeURIComponent(url)+';end';
   setTimeout(async()=>{let ok=false;try{await navigator.clipboard.writeText(url);ok=true}catch(e){}
@@ -700,7 +700,7 @@ function saveHint(){const h=$('saveHint');if(!h)return;h.classList.add('on');con
 async function showResult(){
   toFlow();
   const me=st.me;
-  sh.innerHTML=`<div class="sh"><div></div><button class="close" onclick="close_()" aria-label="أغلق">×</button></div><div class="res"><h3 style="margin-top:4px">بصمتك صارت في العلم ✨</h3><p class="h">شاركها وخلّ ربعك وأهلك يكمّلون العلم وياك</p><div class="hint" id="saveHint"><b>متصفح التطبيق ما يسمح بحفظ الصور</b><span>افتح بطاقتك في المتصفح، وتقدر تحفظها وتنزلها ستوري على طول</span><button class="btn gold sm" id="openExt">افتح بطاقتي في المتصفح</button><em id="extNote"></em></div><img class="card" id="cardImg" alt="بطاقة بصمتك"><div class="acts">
+  sh.innerHTML=`<div class="sh"><div></div><button class="close" onclick="close_()" aria-label="أغلق">×</button></div><div class="res"><h3 style="margin-top:4px">بصمتك صارت في ${shapeOf(me.k)?FULLN[shapeOf(me.k).key]:'العلم'} ✨</h3><p class="h">شاركها وخلّ ربعك وأهلك يكمّلون العلم وياك</p>${Q.get('share')==='x'&&!INAPP?'<div class="xgo" id="xgo"><b>تغريدتك جاهزة مع صورتك</b><span>دوس الزر واختار X من القائمة</span><button class="btn x" id="shXNow">انشر في X مع صورتك</button></div>':''}<div class="hint" id="saveHint"><b>متصفح التطبيق ما يسمح بحفظ الصور</b><span>افتح بطاقتك في المتصفح، وتقدر تحفظها وتنزلها ستوري على طول</span><button class="btn gold sm" id="openExt">افتح بطاقتي في المتصفح</button><em id="extNote"></em></div><img class="card" id="cardImg" alt="بطاقة بصمتك"><div class="acts">
   <button class="btn gold" id="shImg">شارك صورتك</button><button class="btn x" id="shX">انشرها في X</button><button class="btn wa" id="shWa">أرسلها واتساب</button><button class="btn ghost st" id="shSt">حمّلها ستوري 📱 <small>سناب · واتساب · إنستغرام</small></button>${USE_NET?'':'<button class="btn ghost" id="again" style="grid-column:1/-1">جرّب مرة ثانية (نسخة التجربة بس)</button>'}</div></div>`;
   if($('again'))$('again').onclick=()=>{st.me=null;Object.assign(pick,{e:null,m:null,c:null,name:''});$('mine').classList.remove('on');$('go').textContent='حط بصمتك في العلم 🇦🇪';step1()};
   if($('openExt'))$('openExt').onclick=openExternal; if(INAPP)$('saveHint').classList.add('on');
@@ -715,9 +715,12 @@ async function showResult(){
   const tryShare=async withText=>{ // يرجع true لو انفتحت قائمة المشاركة
     if(INAPP||!canFile())return false;
     try{await navigator.share(withText?{files:[file()],text:txtInv}:{files:[file()]});return true}catch(e){return !!(e&&e.name==='AbortError')}};
-  $('shX').onclick=async()=>{if(await tryShare(true))return;
-    if(INAPP)saveHint();   // داخل تطبيق X: نفتح التغريدة بالنص، والصورة يحفظها ويرفقها
+  // داخل تطبيق X ما يقدر يرفق صورة: ننقله لسفاري/كروم وهناك زر واحد يفتح التغريدة مع الصورة
+  $('shX').onclick=async()=>{
+    if(INAPP){saveHint();$('saveHint').querySelector('b').textContent='عشان تطلع صورتك مع التغريدة';$('saveHint').querySelector('span').textContent='بتنفتح بطاقتك في المتصفح، ودوس هناك «انشر في X مع صورتك»';openExternal('&share=x');return}
+    if(await tryShare(true))return;
     window.open('https://x.com/intent/post?text='+encodeURIComponent(txt),'_blank')};
+  if($('shXNow'))$('shXNow').onclick=async()=>{if(!await tryShare(true))window.open('https://x.com/intent/post?text='+encodeURIComponent(txt),'_blank')};
   $('shWa').onclick=()=>window.open('https://wa.me/?text='+encodeURIComponent(txtInv),'_blank');
   let storyBlob=null; const storyFile=()=>new File([storyBlob],`basma-story-${me.k}.jpg`,{type:'image/jpeg'});
   drawCard(me,true).then(sc=>new Promise(r=>sc.toBlob(r,'image/jpeg',.92))).then(b=>storyBlob=b);
