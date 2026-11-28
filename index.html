@@ -167,6 +167,16 @@ section.blk{margin-top:26px}
 </style>
 </head>
 <body>
+<script>
+window.__ok=0;
+(function(){function show(m){var b=document.getElementById('boot');if(!b)return;b.style.display='flex';if(m){var e=document.getElementById('bootErr');e.textContent=m}}
+ window.addEventListener('error',function(e){if(!window.__ok)show((e&&e.message||'')+'')});
+ setTimeout(function(){if(!window.__ok)show('')},8000);})();
+</script>
+<div id="boot" style="display:none;position:fixed;inset:auto 16px 110px 16px;z-index:90;flex-direction:column;align-items:center;gap:8px;padding:16px;border-radius:18px;background:#0f3147;border:1px solid rgba(215,180,101,.5);text-align:center;font-family:'Readex Pro',system-ui;color:#FFF5E5">
+ <b style="font-size:16px">الصفحة ما تحمّلت كاملة</b><span style="font-size:13px;opacity:.75">اضغط هني وتنفتح من جديد</span>
+ <button onclick="location.reload()" style="font:700 16px 'Readex Pro',system-ui;padding:12px 26px;border-radius:14px;border:0;background:#D7B465;color:#1d1606">افتح الصفحة من جديد ↻</button>
+ <small id="bootErr" style="font-size:10px;opacity:.5;direction:ltr"></small></div>
 <div class="wrap">
   <div class="top">
     <span class="chip g">عيد الاتحاد الـ55 🇦🇪</span>
@@ -218,7 +228,7 @@ section.blk{margin-top:26px}
   <div class="credit"><span class="lab">إنشاء الصفحة</span><a class="sig" href="https://el3azy.com" target="_blank" rel="noopener"><img src="assets/avatar.png" alt="العازي" width="52" height="52"><b>العازي</b><i></i><span>el3azy.com</span></a></div>
 </div>
 
-<div class="cta" id="cta"><button class="btn gold" id="go">حط بصمتك في العلم 🇦🇪</button><button class="mus off" id="mus" aria-label="تشغيل أو إيقاف الأغنية">♪</button></div>
+<div class="cta" id="cta"><button class="btn gold" id="go">حط بصمتك في العلم 🇦🇪</button><button class="mus off" id="mus" style="display:none" aria-label="تشغيل أو إيقاف الأغنية">♪</button></div>
 
 
 <script>
@@ -419,12 +429,12 @@ function render(){
   let p;
   if(!MAPMODE()){p=Math.floor(st.n/CELLS*100);$('pctlbl').innerHTML=`العلم مكتمل<b dir="ltr">${p}%</b>`}
   else if(FINAL()){p=100;const h=st.n-FIN;
-    $('pctlbl').innerHTML=`اكتملت اللوحة 🎉<b>${h?'سجل الشرف: '+fmt(h):'3 من 3'}</b>`;
+    $('pctlbl').innerHTML=`اكتملت اللوحة 🎉<b>العلم · الخريطة · الـ55</b>`;
     if($('done').dataset.st!=='fin'){$('done').dataset.st='fin';$('done').classList.add('on');$('trio').classList.add('on');
       $('sub').textContent='شكراً لكل من بصم 🇦🇪';
       $('doneT').textContent='اكتملت «بصمة وطن» 🇦🇪';
-      $('doneS').textContent=`${fmt(FIN)} بصمة كمّلت العلم وخريطة الإمارات والـ55.. وكل بصمة يديدة تنضاف لسجل الشرف لين عيد الاتحاد`;
-      $('miniMap').style.display='';if(!st.me)$('go').textContent='حط بصمتك في سجل الشرف 🇦🇪';
+      $('doneS').textContent=`${fmt(FIN)} بصمة كمّلت العلم وخريطة الإمارات والـ55.. وتقدر تحط بصمتك وتنضاف للعدد لين عيد الاتحاد`;
+      $('miniMap').style.display='';if(!st.me)$('go').textContent='حط بصمتك 🇦🇪';
       $('flag').setAttribute('aria-label','لوحة بصمة وطن: العلم والخريطة والـ55')}
     drawFlag($('miniFlag').getContext('2d'),240,120,0,{n:CELLS,still:true,me:st.me&&st.me.k<=CELLS?st.me.k:0});
     drawShape(SMAP,$('miniMap').getContext('2d'),150,120,0,{n:CELLS+MAPN,still:true,me:st.me&&shapeOf(st.me.k)===SMAP?st.me.k:0})}
@@ -447,7 +457,7 @@ function render(){
   // الأندية بترتيب ثابت
   $('clubs').innerHTML=Object.keys(CL).map(k=>`<div class="cl"><span class="cr">${crest(k,24)}</span><span class="nm">${CL[k]}</span><span class="n">${fmt(st.c[k]||0)}</span></div>`).join('');
   // بصمتي
-  if(st.me){$('mine').classList.add('on');$('mineNo').textContent=`بصمتك رقم ${fmt(st.me.k)}`;$('mine').querySelector('span').textContent=HONOR(st.me.k)?'بصمتك في سجل الشرف ✨':shapeOf(st.me.k)?`بصمتك تلمع في ${WORD[shapeOf(st.me.k).key]} ✨`:'بصمتك تلمع في العلم ✨';$('go').textContent='شارك بطاقتك 🇦🇪'}
+  if(st.me){$('mine').classList.add('on');$('mineNo').textContent=`بصمتك رقم ${fmt(st.me.k)}`;$('mine').querySelector('span').textContent=HONOR(st.me.k)?'بصمتك انضافت لـ«بصمة وطن» ✨':shapeOf(st.me.k)?`بصمتك تلمع في ${WORD[shapeOf(st.me.k).key]} ✨`:'بصمتك تلمع في العلم ✨';$('go').textContent='شارك بطاقتك 🇦🇪'}
 }
 /* شريط آخر البصمات */
 let ti=0;
@@ -582,9 +592,9 @@ async function drawCard(me,story=false){
     pan((c,w,h)=>drawShape(SNUM,c,w,h,0.7,{n:FIN,still:true}),0,290,190);
     pan((c,w,h)=>drawShape(SMAP,c,w,h,0.7,{n:CELLS+MAPN,still:true}),305,290,232);
     pan((c,w,h)=>drawFlag(c,w,h,0.7,{n:CELLS,still:true}),610,290,145);
-    tg.font='700 30px "Readex Pro"';const lw=tg.measureText('سجل الشرف').width+48;tg.fillStyle='rgba(215,180,101,.16)';tg.strokeStyle='rgba(215,180,101,.7)';tg.lineWidth=1.5;
+    tg.font='700 30px "Readex Pro"';const lw=tg.measureText('اكتملت اللوحة ✓').width+48;tg.fillStyle='rgba(215,180,101,.16)';tg.strokeStyle='rgba(215,180,101,.7)';tg.lineWidth=1.5;
     tg.beginPath();tg.roundRect?tg.roundRect(450-lw/2,392,lw,50,25):tg.rect(450-lw/2,392,lw,50);tg.fill();tg.stroke();
-    tg.fillStyle='#f1dca4';tg.textAlign='center';tg.direction='rtl';tg.fillText('سجل الشرف',450,428);
+    tg.fillStyle='#f1dca4';tg.textAlign='center';tg.direction='rtl';tg.fillText('اكتملت اللوحة ✓',450,428);
     g.drawImage(tri,90,fy);fg.meR=null}
   else{g.save();g.shadowColor='rgba(0,0,0,.5)';g.shadowBlur=40;g.shadowOffsetY=16;g.drawImage(fc,fx,fy);g.restore()}
   if(fg.meR){const mx=fx+fg.meR.x+fg.cw/2, my=fy+fg.meR.y-fg.chh*0.4; g.font='700 30px "Readex Pro"';const tw=g.measureText('بصمتي').width+36, bh=50;
@@ -643,7 +653,7 @@ async function showResult(){
   const c=await drawCard(me,false); $('cardImg').src=c.toDataURL('image/jpeg',.92);
   cardBlob=await new Promise(r=>c.toBlob(r,'image/jpeg',.92));
   const au=ls.get('cardOf')||(ls.get('auth')||{}).u, link=`https://el3azy.com/basma/?d=${me.k}`+(au&&USE_NET?`&u=${au}`:'');
-  const txt=`بصمتي رقم ${fmt(me.k)} في «بصمة وطن» 🇦🇪\n«${MSG[me.m]}»\n\n${HONOR(me.k)?'حط بصمتك في سجل الشرف':'حط بصمتك وخلّنا نكمّل '+(shapeOf(me.k)===SMAP?'خريطة الإمارات':(shapeOf(me.k)?'الـ55':'العلم'))} 👇\nel3azy.com/basma\n\n#عيد_الاتحاد_55`;
+  const txt=`بصمتي رقم ${fmt(me.k)} في «بصمة وطن» 🇦🇪\n«${MSG[me.m]}»\n\n${HONOR(me.k)?'حط بصمتك في «بصمة وطن»':'حط بصمتك وخلّنا نكمّل '+(shapeOf(me.k)===SMAP?'خريطة الإمارات':(shapeOf(me.k)?'الـ55':'العلم'))} 👇\nel3azy.com/basma\n\n#عيد_الاتحاد_55`;
   const txtInv=txt.replace('el3azy.com/basma',link);
   const file=()=>new File([cardBlob],`basma-${me.k}.jpg`,{type:'image/jpeg'});
   const canFile=()=>{try{return !!(navigator.canShare&&navigator.canShare({files:[file()]}))}catch(e){return false}};
@@ -702,11 +712,12 @@ async function restoreMe(){try{
 }catch(e){}}
 (function(){ if(!INV)return;
   const draw=()=>{const who=INV.n||'صديقك';
-    $('inv').innerHTML=`<i class="ic"></i><div><b>${esc(who)} حط بصمته رقم ${fmt(INV.k)}${INV.e?' من '+EM[INV.e]:''} 🇦🇪</b><span>${st.me?'بصمته تلمع عدال بصمتك':(FINAL()?'حط بصمتك عداله في سجل الشرف':`حط بصمتك عداله وكمّلوا ${STAGE()?WORD[STAGE().key]:'العلم'} مع بعض`)}</span></div>`;
+    $('inv').innerHTML=`<i class="ic"></i><div><b>${esc(who)} حط بصمته رقم ${fmt(INV.k)}${INV.e?' من '+EM[INV.e]:''} 🇦🇪</b><span>${st.me?'بصمته تلمع عدال بصمتك':(FINAL()?'حط بصمتك عداله في «بصمة وطن»':`حط بصمتك عداله وكمّلوا ${STAGE()?WORD[STAGE().key]:'العلم'} مع بعض`)}</span></div>`;
     $('inv').classList.add('on')};
   draw();
   if(INV.u&&USE_NET)getJ(`alam/g/${INV.u}`).then(r=>{if(r){INV.n=cleanName(r.n||'');INV.e=EM[r.e]?r.e:null;draw()}}).catch(()=>{});
 })();
+window.__ok=1;var _b=document.getElementById('boot');if(_b)_b.style.display='none';
 refresh(true).then(openMeLink).then(restoreMe).then(async()=>{try{
   if(!USE_NET||!st.me||ls.get('nameSent'))return; const nm=cleanName(st.me.name); if(!nm)return;
   const a=await tok(); const cur=await getJ(`alam/g/${a.u}`); if(!cur||cur.n){ls.set('nameSent',1);return}
