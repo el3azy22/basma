@@ -44,8 +44,22 @@ h1{font-size:46px;line-height:1.45;margin:14px 0 0;padding:.06em 0 .12em;font-we
 .inv .ic{flex:none;width:12px;height:12px;border-radius:3px;background:#fff;box-shadow:0 0 12px 3px rgba(255,255,255,.7);animation:blink 1.6s infinite}
 .inv b{display:block;font-size:16px;line-height:1.5}.inv span{display:block;font-size:13.5px;color:var(--gold2)}
 .inv button{margin-inline-start:auto;flex:none}
-.done{display:none;align-items:center;gap:12px;margin:-2px 0 12px;padding:10px 12px;border-radius:14px;background:rgba(0,132,61,.10);border:1px solid rgba(46,224,122,.3)}
-.done.on{display:flex}.done canvas{width:84px;height:42px;flex:none}.done #miniMap{width:52px;height:42px}.done b{display:block;font-size:14.5px}.done span{display:block;font-size:12px;color:var(--muted);line-height:1.5}
+.done{display:none;margin:-2px -4px 14px}.done.on{display:block}
+.dh{display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding:0 6px 8px}.dh b{font-size:15px;color:var(--gold2)}.dh span{font-size:11.5px;color:var(--muted)}
+.car-w{position:relative}
+.car{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:2px 4px 4px;-webkit-overflow-scrolling:touch}
+.car::-webkit-scrollbar{display:none}
+.sl{flex:0 0 78%;min-width:0;scroll-snap-align:center;border-radius:16px;border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.015));padding:10px 10px 12px;text-align:center;cursor:pointer;transition:border-color .2s,transform .15s}
+.sl:active{transform:scale(.98)}.sl.mine{border-color:rgba(215,180,101,.6);background:linear-gradient(180deg,rgba(215,180,101,.12),rgba(255,255,255,.015))}
+.sl.cur{border-style:dashed}
+.sl .cv{height:118px;display:flex;align-items:center;justify-content:center}.sl canvas{max-width:100%;max-height:118px}
+.sl b{display:block;margin-top:8px;font-size:15px}.sl span{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+.sl em{display:inline-block;margin-top:6px;font-style:normal;font-size:11.5px;font-weight:600;color:#1d1606;background:var(--gold);padding:2px 10px;border-radius:99px}
+.arr{position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:34px;height:34px;border-radius:50%;background:rgba(7,29,43,.85);border:1px solid rgba(215,180,101,.5);color:var(--gold);font-size:20px;line-height:30px;padding:0}
+.arr{direction:ltr;unicode-bidi:isolate}.arr.nx{left:-2px}.arr.pv{right:-2px}.arr[disabled]{opacity:0;pointer-events:none}
+.dots{display:flex;justify-content:center;gap:6px;margin-top:8px}.dots i{width:6px;height:6px;border-radius:99px;background:rgba(255,255,255,.2);transition:.25s}.dots i.on{width:18px;background:var(--gold)}
+.viewing{display:none;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;padding:8px 12px;border-radius:12px;background:rgba(215,180,101,.12);border:1px solid rgba(215,180,101,.45);font-size:13.5px;font-weight:600}
+.viewing.on{display:flex}.viewing button{font-size:12.5px;font-weight:600;padding:6px 10px;border-radius:10px;background:rgba(255,255,255,.08);border:1px solid var(--line)}
 .trio{display:none;justify-content:center;gap:8px;margin-top:10px}.trio.on{display:flex}
 .trio i{font-style:normal;font-size:12.5px;font-weight:600;padding:5px 12px;border-radius:99px;border:1px solid var(--line);color:var(--muted);transition:.3s}
 .trio i.on{color:var(--gold2);border-color:rgba(215,180,101,.6);background:rgba(215,180,101,.12)}
@@ -188,7 +202,12 @@ window.__ok=0;
   <div class="inv" id="inv"></div>
 
   <div class="flagcard">
-    <div class="done" id="done"><canvas id="miniFlag" width="240" height="120"></canvas><canvas id="miniMap" width="150" height="120" style="display:none"></canvas><div><b id="doneT">العلم الأول اكتمل ✅</b><span id="doneS"></span></div></div>
+    <div class="done" id="done">
+      <div class="dh"><b>المراحل</b><span>اسحب يمين ويسار · اضغط على أي شكل تشوفه كبير</span></div>
+      <div class="car-w"><button class="arr nx" id="carNext" aria-label="التالي">‹</button><div class="car" id="car"></div><button class="arr pv" id="carPrev" aria-label="السابق">›</button></div>
+      <div class="dots" id="dots"></div>
+    </div>
+    <div class="viewing" id="viewing"><span id="viewT"></span><button id="viewBack">رجوع للحين ✕</button></div>
     <div class="flagbox"><canvas id="flag" width="1056" height="528" aria-label="علم الإمارات من بصمات المشاركين"></canvas><div class="tip" id="tip"></div></div>
     <div class="trio" id="trio"><i>العلم ✅</i><i>الخريطة ✅</i><i>الـ55 ✅</i></div>
     <div class="stats">
@@ -365,6 +384,9 @@ let T0=performance.now(), vis=true, geo={};
 const INV=(()=>{const k=parseInt(Q.get('d')||'',10), u=Q.get('u')||'';
   if(!(k>0&&k<1e6))return null; return {k,u:/^[A-Za-z0-9_-]{6,40}$/.test(u)?u:'',e:null,n:''}})();
 function loop(now){ if(vis){const o={me:st.me&&st.me.k,friend:INV&&INV.k},t=(now-T0)/1000;
+  if(VIEW){if(VIEW.S){const h=Math.round(cv.width*VIEW.S.rows/VIEW.S.cols);if(cv.height!==h)cv.height=h;geo=drawShape(VIEW.S,cx,cv.width,cv.height,t,{...o,n:VIEW.base+VIEW.N})}
+    else{if(cv.height!==528)cv.height=528;geo=drawFlag(cx,cv.width,cv.height,t,{...o,n:CELLS})}
+    requestAnimationFrame(loop);return}
   if(FINAL()){if(cv.height!==528)cv.height=528;const ph=Math.floor(t/4.5)%3, f=(t%4.5);
     cx.save();cx.globalAlpha=Math.min(1,f/0.6,(4.5-f)/0.6);
     geo=ph===0?drawFlag(cx,cv.width,cv.height,t,{...o,n:CELLS}):drawShape(ph===1?SMAP:SNUM,cx,cv.width,cv.height,t,{...o,n:ph===1?CELLS+MAPN:FIN});
@@ -394,6 +416,44 @@ cv.addEventListener('click',ev=>{
   tip.style.left=Math.min(Math.max(ev.clientX-r.left,90),r.width-90)+'px';tip.style.top=(ev.clientY-r.top-8)+'px';
   tip.classList.add('on');clearTimeout(tip._t);tip._t=setTimeout(()=>tip.classList.remove('on'),2600);
 });
+
+/* ───── معرض المراحل ───── */
+let VIEW=null;   // شكل مكتمل يتعرض كبير بدال الشكل الحالي
+const stagesUpTo=S=>[{key:'flag',name:'العلم',base:0,N:CELLS,S:null},...SHAPES.slice(0,SHAPES.indexOf(S)+1).map(x=>({key:x.key,name:FULLN[x.key],base:x.base,N:x.N,S:x}))];
+const inStage=(g,k)=>k&&(g.S?shapeOf(k)===g.S:k<=CELLS);
+let carList=[];
+function buildCar(S){
+  carList=stagesUpTo(S);
+  $('car').innerHTML=carList.map((g,i)=>`<div class="sl" data-i="${i}"><div class="cv"><canvas width="${g.S?Math.round(236*g.S.cols/g.S.rows):472}" height="236"></canvas></div><b></b><span></span><em style="display:none"></em></div>`).join('');
+  $('dots').innerHTML=carList.map(()=>'<i></i>').join('');
+  $('car').querySelectorAll('.sl').forEach(el=>el.onclick=()=>openView(+el.dataset.i));
+  const mineI=st.me?carList.findIndex(g=>inStage(g,st.me.k)):-1;
+  drawCar(S); setTimeout(()=>goSlide(mineI>=0?mineI:carList.length-1,false),60);
+}
+function drawCar(S){
+  if(!carList.length)return;
+  carList.forEach((g,i)=>{const el=$('car').children[i];if(!el)return;const cur=i===carList.length-1, c=el.querySelector('canvas'), x=c.getContext('2d'), mk=st.me&&inStage(g,st.me.k)?st.me.k:0;
+    const n=cur?st.n:g.base+g.N;
+    if(g.S)drawShape(g.S,x,c.width,c.height,0.7,{n,still:true,me:mk});else drawFlag(x,c.width,c.height,0.7,{n,still:true,me:mk});
+    const done=n-g.base>=g.N, p=Math.min(100,Math.floor((n-g.base)/g.N*100));
+    el.classList.toggle('cur',!done);el.classList.toggle('mine',!!mk);
+    el.querySelector('b').textContent=done?`${g.name} ✅`:`${g.name} · الحين`;
+    el.querySelector('span').textContent=done?`اكتمل بـ${fmt(g.N)} بصمة · من ${fmt(g.base+1)} لين ${fmt(g.base+g.N)}`:`مكتمل ${p}% · باقي ${fmt(g.base+g.N-n)} بصمة`;
+    const em=el.querySelector('em');em.style.display=mk?'':'none';em.textContent=mk?`بصمتك رقم ${fmt(mk)} هني ✨`:''});
+}
+let carI=0;
+function goSlide(i,smooth=true){i=Math.max(0,Math.min(carList.length-1,i));const el=$('car').children[i];if(!el)return;
+  const car=$('car');car.scrollTo({left:el.offsetLeft-(car.clientWidth-el.offsetWidth)/2,behavior:smooth?'smooth':'auto'});setCar(i)}
+function setCar(i){carI=i;$('dots').querySelectorAll('i').forEach((d,k)=>d.classList.toggle('on',k===i));
+  $('carPrev').disabled=i<=0;$('carNext').disabled=i>=carList.length-1}
+$('carNext').onclick=()=>goSlide(carI+1);$('carPrev').onclick=()=>goSlide(carI-1);
+$('car').addEventListener('scroll',()=>{clearTimeout($('car')._t);$('car')._t=setTimeout(()=>{const car=$('car'),mid=car.getBoundingClientRect().left+car.clientWidth/2;let best=0,bd=1e9;
+  [...car.children].forEach((el,k)=>{const r=el.getBoundingClientRect(),d=Math.abs(r.left+r.width/2-mid);if(d<bd){bd=d;best=k}});setCar(best)},80)},{passive:true});
+function openView(i){const g=carList[i];if(!g)return;
+  if(i===carList.length-1&&g.S===STAGE()){closeView();cv.scrollIntoView({behavior:'smooth',block:'center'});return}
+  VIEW=g;$('viewT').textContent=`تشوف: ${g.name} ✅`;$('viewing').classList.add('on');cv.scrollIntoView({behavior:'smooth',block:'center'})}
+function closeView(){VIEW=null;$('viewing').classList.remove('on')}
+$('viewBack').onclick=closeView;
 
 /* ───── البيانات ───── */
 const api=(p,q='')=>`${DB}/${p}.json?${[NSQ,q].filter(Boolean).join('&')}`;
@@ -442,8 +502,8 @@ function render(){
       $('doneS').textContent=`${fmt(FIN)} بصمة كمّلت العلم وخريطة الإمارات والـ55.. وتقدر تحط بصمتك وتنضاف للعدد لين عيد الاتحاد`;
       $('miniMap').style.display='';if(!st.me)$('go').textContent='حط بصمتك 🇦🇪';
       $('flag').setAttribute('aria-label','لوحة بصمة وطن: العلم والخريطة والـ55')}
-    drawFlag($('miniFlag').getContext('2d'),240,120,0,{n:CELLS,still:true,me:st.me&&st.me.k<=CELLS?st.me.k:0});
-    drawShape(SMAP,$('miniMap').getContext('2d'),150,120,0,{n:CELLS+MAPN,still:true,me:st.me&&shapeOf(st.me.k)===SMAP?st.me.k:0})}
+    if($('miniFlag'))drawFlag($('miniFlag').getContext('2d'),240,120,0,{n:CELLS,still:true,me:st.me&&st.me.k<=CELLS?st.me.k:0});
+    if($('miniMap'))drawShape(SMAP,$('miniMap').getContext('2d'),150,120,0,{n:CELLS+MAPN,still:true,me:st.me&&shapeOf(st.me.k)===SMAP?st.me.k:0})}
   else{const S=STAGE();
     const m=st.n-S.base, rnd=S===LAST?Math.floor(m/S.N):0; p=S===LAST&&rnd&&!(m%S.N)?100:Math.floor((S===LAST?m%S.N:m)/S.N*100);
     $('pctlbl').innerHTML=rnd?`اكتمل ${WORD[S.key]} 🎉<b>الجولة ${rnd+1}: <span dir="ltr">${p}%</span></b>`:`${WORD[S.key]} ${DONE_W[S.key]}<b dir="ltr">${p}%</b>`;
@@ -451,13 +511,10 @@ function render(){
       const prev=['العلم',...SHAPES.slice(0,SHAPES.indexOf(S)).map(x=>WORD[x.key])];
       const list=prev.length>1?prev.slice(0,-1).join(' و')+' و'+prev[prev.length-1]:prev[0];
       $('sub').textContent=`اكتمل ${list} 🇦🇪 الحين نكمّل ${FULLN[S.key]}`;
-      $('doneT').textContent=prev.map(x=>x+' ✅').join(' ');
-      $('doneS').textContent=`${fmt(S.base)} بصمة كمّلت ${list}.. الحين نكمّل ${FULLN[S.key]}`;
-      $('miniMap').style.display=S===SMAP?'none':'';
       if(!st.me)$('go').textContent=`حط بصمتك في ${WORD[S.key]} 🇦🇪`;
-      $('flag').setAttribute('aria-label',`${FULLN[S.key]} من بصمات المشاركين`)}
-    drawFlag($('miniFlag').getContext('2d'),240,120,0,{n:CELLS,still:true,me:st.me&&st.me.k<=CELLS?st.me.k:0});
-    if(S!==SMAP)drawShape(SMAP,$('miniMap').getContext('2d'),150,120,0,{n:CELLS+MAPN,still:true,me:st.me&&shapeOf(st.me.k)===SMAP?st.me.k:0})}
+      $('flag').setAttribute('aria-label',`${FULLN[S.key]} من بصمات المشاركين`);
+      buildCar(S)}
+    drawCar(S)}
   $('pbar').style.width=p+'%';
   const left=Math.ceil((new Date('2026-12-02T00:00:00+04:00')-Date.now())/864e5);
   $('count').innerHTML=left>1?`<i></i>باقي ${left} أيام على العيد`:(left===1?'<i></i>باجر عيد الاتحاد':'<i></i>عيد اتحاد سعيد');
