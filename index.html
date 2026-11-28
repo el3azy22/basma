@@ -45,11 +45,11 @@ h1{font-size:46px;line-height:1.45;margin:14px 0 0;padding:.06em 0 .12em;font-we
 .inv b{display:block;font-size:16px;line-height:1.5}.inv span{display:block;font-size:13.5px;color:var(--gold2)}
 .inv button{margin-inline-start:auto;flex:none}
 .done{display:none;margin:-4px -4px 12px}.done.on{display:block}
-.rail{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:6px 4px 2px}.rail::-webkit-scrollbar{display:none}
-.st{position:relative;flex:1 1 0;min-width:56px;display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 4px 8px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.03);cursor:pointer;transition:border-color .2s,background .2s}
+.rail{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:6px;padding:6px 4px 2px}.rail::-webkit-scrollbar{display:none}
+.st{position:relative;min-width:0;overflow:visible;display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 4px 8px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.03);cursor:pointer;transition:border-color .2s,background .2s}
 .st:active{transform:scale(.97)}
-.st .th{height:32px;width:100%;display:flex;align-items:center;justify-content:center}.st canvas{max-height:32px;max-width:90%}
-.st b{font-size:11px;font-weight:600;line-height:1.2;white-space:nowrap}
+.st .th{height:32px;width:100%;min-width:0;display:flex;align-items:center;justify-content:center;overflow:hidden}.st canvas{display:block;height:auto;width:auto;max-height:32px;max-width:100%;min-width:0}
+.st b{font-size:11px;font-weight:600;line-height:1.2;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:clip}
 .st small{font-size:9.5px;color:var(--muted);font-variant-numeric:tabular-nums;line-height:1}
 .st .ck{position:absolute;top:-5px;inset-inline-start:-5px;width:16px;height:16px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.4)}
 .st .ck svg{width:9px;height:9px}
@@ -424,7 +424,7 @@ const CKSVG='<span class="ck"><svg viewBox="0 0 12 12"><path d="M2.5 6.3l2.3 2.3
 const SHORT={flag:'العلم',map:'الخريطة',num:'الـ55',word:'الإمارات',heart:'القلب'};
 function buildCar(S){
   carList=stagesUpTo(S);
-  $('car').innerHTML=carList.map((g,i)=>`<div class="st" data-i="${i}" role="button"><div class="th"><canvas width="${g.S?Math.round(200*g.S.cols/g.S.rows):400}" height="200"></canvas></div><b>${SHORT[g.key]}</b><small></small></div>`).join('');
+  $('car').innerHTML=carList.map((g,i)=>`<div class="st" data-i="${i}" role="button"><div class="th"><canvas width="${g.S?Math.round(200*g.S.cols/g.S.rows):400}" height="200" style="width:${g.S?Math.min(52,Math.round(30*g.S.cols/g.S.rows)):52}px;height:${g.S?Math.round(Math.min(52,Math.round(30*g.S.cols/g.S.rows))*g.S.rows/g.S.cols):26}px"></canvas></div><b>${SHORT[g.key]}</b><small></small></div>`).join('');
   $('car').querySelectorAll('.st').forEach(el=>el.onclick=()=>openView(+el.dataset.i));
   drawCar(S);
 }
