@@ -170,6 +170,11 @@ section.blk{margin-top:26px}
 .res img.card.pulse{animation:pulse 1.2s 2}
 @keyframes pulse{50%{box-shadow:0 0 0 6px rgba(215,180,101,.55),0 20px 50px rgba(0,0,0,.5)}}
 .res img.card{-webkit-touch-callout:default;user-select:auto}
+.claim{text-align:center}.cbox{margin:14px 0 16px;padding:16px;border-radius:16px;background:linear-gradient(160deg,rgba(215,180,101,.12),rgba(255,255,255,.03));border:1px solid rgba(215,180,101,.35)}.cbox b{display:block;font-size:22px;color:var(--gold2)}.cbox span{display:block;margin-top:4px;font-size:14px}.cbox q{display:block;margin-top:10px;font-size:15px;font-weight:600;quotes:'«' '»'}.claim .btn{width:100%}
+.ticker:empty{display:none}
+.live{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;color:#5fd99a;margin-bottom:6px;letter-spacing:.2px}.live i{width:7px;height:7px;border-radius:50%;background:#3ccf7e;box-shadow:0 0 0 0 rgba(60,207,126,.6);animation:lv 1.8s infinite}@keyframes lv{70%{box-shadow:0 0 0 7px rgba(60,207,126,0)}100%{box-shadow:0 0 0 0 rgba(60,207,126,0)}}
+section.blk,.credit{transition:opacity .6s ease,transform .6s cubic-bezier(.2,.8,.2,1)}.rv{opacity:0;transform:translateY(18px)}
+@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none}.live i{animation:none}}
 .xgo{margin:0 0 12px;padding:14px;border-radius:16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.3);text-align:center;animation:up .3s}
 .xgo b{display:block;font-size:16px}.xgo span{display:block;font-size:12.5px;color:var(--muted);margin:2px 0 10px}.xgo .btn{width:100%}
 .res .acts{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:14px}
@@ -209,7 +214,7 @@ window.__ok=0;
     <div class="flagbox"><canvas id="flag" width="1056" height="528" aria-label="علم الإمارات من بصمات المشاركين"></canvas><div class="tip" id="tip"></div></div>
     <div class="trio" id="trio"><i>العلم ✅</i><i>الخريطة ✅</i><i>الـ55 ✅</i></div>
     <div class="stats">
-      <div class="big" id="total">0<small>بصمة</small></div>
+      <div><span class="live"><i></i>مباشر</span><div class="big" id="total">0<small>بصمة</small></div></div>
       <div class="pct" id="pctlbl">العلم مكتمل<b id="pct">0%</b></div>
     </div>
     <div class="bar"><div id="pbar"></div></div>
@@ -593,7 +598,7 @@ async function save(){
       pick.e=mine.e;pick.m=mine.m;pick.c=mine.c||null;
       await refresh(false);
     }
-    st.me={k,e:pick.e,m:pick.m,c:pick.c,name:pick.name}; if(USE_NET)ls.set('me',st.me);
+    st.me={k,e:pick.e,m:pick.m,c:pick.c,name:pick.name}; if(USE_NET)ls.set('me',st.me); pinMe();
     render(); close_(); flyIn(k);
     setTimeout(()=>{ov.classList.add('on');$('cta').classList.add('hide');showResult()},1900);
   }catch(e){console.warn(e);b.disabled=false;b.textContent='ثبّت بصمتي';er.textContent='صار خلل في الاتصال، جرّب مرة ثانية'}
@@ -689,13 +694,15 @@ async function drawCard(me,story=false){
 }
 let cardBlob=null;
 const INAPP=/Twitter|FBAN|FBAV|Instagram|Snapchat|TikTok|musical_ly|Line\/|LinkedInApp|GSA\//i.test(navigator.userAgent)||(/iPhone|iPad/.test(navigator.userAgent)&&!/Safari\//.test(navigator.userAgent));
-function myCardLink(){const u=ls.get('cardOf')||(ls.get('auth')||{}).u;return 'https://el3azy.com/basma/'+(u?'?me='+u:'')}
+function myU(){return ls.get('cardOf')||(ls.get('auth')||{}).u}
+function myCardLink(){const u=myU();return 'https://el3azy.com/basma/'+(u?'?me='+u+'&h=1':'')}
+function pinMe(){if(!INAPP||!USE_NET||!st.me)return;const u=myU();if(!u)return;try{history.replaceState(null,'',location.pathname+'?me='+u)}catch(e){}}
 function openExternal(extra=''){
   const url=myCardLink()+(extra&&myCardLink().includes('?')?extra:extra.replace('&','?')), ua=navigator.userAgent, bare=url.replace(/^https:\/\//,'');
   if(/iPhone|iPad/.test(ua))location.href='x-safari-https://'+bare;
   else if(/Android/.test(ua))location.href='intent://'+bare+'#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url='+encodeURIComponent(url)+';end';
   setTimeout(async()=>{let ok=false;try{await navigator.clipboard.writeText(url);ok=true}catch(e){}
-    const n=$('extNote');if(n)n.textContent=(ok?'نسخت لك الرابط ✓ الصقه في Safari أو Chrome: ':'لو ما انفتح، انسخ هالرابط وافتحه في Safari أو Chrome: ')+url},900)}
+    const n=$('extNote');if(n)n.innerHTML='لو ما انفتح: دوس <b>⋯</b> فوق واختار <b>«فتح في '+(/Android/.test(ua)?'Chrome':'Safari')+'»</b>، بصمتك بتنتقل معاك بنفس رقمها'+(ok?'<br>(ونسخت لك الرابط بعد ✓)':'')},900)}
 function saveHint(){const h=$('saveHint');if(!h)return;h.classList.add('on');const im=$('cardImg');im.classList.remove('pulse');void im.offsetWidth;im.classList.add('pulse');h.scrollIntoView({behavior:'smooth',block:'center'})}
 async function showResult(){
   toFlow();
@@ -753,19 +760,27 @@ async function showResult(){
   btn.setAttribute('aria-label','السلام الوطني');
   ui();
 })();
+try{if('IntersectionObserver' in window){const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.remove('rv');io.unobserve(e.target)}}),{rootMargin:'0px 0px -8% 0px'});document.querySelectorAll('section.blk,.credit').forEach(el=>{el.classList.add('rv');io.observe(el)})}}catch(e){}
 window.close_=close_; window.drawCard=drawCard; window.drawFlag=drawFlag; window.st=st;
 async function rankOf(r){const [t,after]=await Promise.all([getJ('alam/t/n'),getJ('alam/g',`orderBy="t"&startAt=${r.t}`)]);return Math.max(1,(t||1)-Math.max(0,Object.keys(after||{}).length-1))}
 async function openMeLink(){try{
   const u=Q.get('me'); if(!USE_NET||!u||!/^[A-Za-z0-9_-]{6,40}$/.test(u))return;
-  {const q=new URLSearchParams(location.search);q.delete('me');history.replaceState(null,'',location.pathname+(q.toString()?'?'+q:''))}
+  if(!INAPP){const q=new URLSearchParams(location.search);['me','h'].forEach(x=>q.delete(x));history.replaceState(null,'',location.pathname+(q.toString()?'?'+q:''))}
+  if(st.me){ if(myU()===u){ov.classList.add('on');$('cta').classList.add('hide');showResult()} return }   // عنده بصمته في هالمتصفح: ما نلمسها
   const r=await getJ(`alam/g/${u}`); if(!r)return;
-  st.me={k:await rankOf(r),e:r.e,m:r.m,c:r.c||null,name:r.n||''}; ls.set('me',st.me); ls.set('cardOf',u); render();
-  ov.classList.add('on');$('cta').classList.add('hide');showResult();
+  const k=await rankOf(r);
+  const claim=()=>{st.me={k,e:r.e,m:r.m,c:r.c||null,name:r.n||''}; ls.set('me',st.me); ls.set('cardOf',u); pinMe(); render(); ov.classList.add('on');$('cta').classList.add('hide');showResult()};
+  if(Q.get('h')==='1'||Q.get('share')==='x')return claim();       // جاي من زر «افتح بطاقتي» نفسه
+  // رابط فيه بصمة (مثلاً من «فتح في Safari» داخل X): نتأكد إنها بصمته قبل ما نعتمدها
+  const nm=cleanName(r.n||'');
+  sh.innerHTML=`<div class="sh"><div></div><button class="close" onclick="close_()" aria-label="أغلق">×</button></div><div class="res claim"><h3>هذي بصمتك؟</h3><p class="h">لقينا بصمة محفوظة في هالرابط</p><div class="cbox"><b>بصمة رقم ${fmt(k)}</b><span>${nm?esc(nm)+' من ':'من '}${EM[r.e]||''}</span><q>${esc(MSG[r.m]||'')}</q></div><button class="btn gold" id="cY">إي، هذي بصمتي</button><button class="btn ghost" id="cN" style="margin-top:8px">لا، أبا أحط بصمتي</button></div>`;
+  ov.classList.add('on');$('cta').classList.add('hide');
+  $('cY').onclick=claim; $('cN').onclick=()=>{close_()};
 }catch(e){}}
 async function restoreMe(){try{
   if(!USE_NET||st.me||!ls.get('auth'))return; const a=await tok(); const mine=await getJ(`alam/g/${a.u}`); if(!mine)return;
   const [t,after]=await Promise.all([getJ('alam/t/n'),getJ('alam/g',`orderBy="t"&startAt=${mine.t}`)]);
-  st.me={k:Math.max(1,(t||1)-Math.max(0,Object.keys(after||{}).length-1)),e:mine.e,m:mine.m,c:mine.c||null,name:mine.n||''}; ls.set('me',st.me); render();
+  st.me={k:Math.max(1,(t||1)-Math.max(0,Object.keys(after||{}).length-1)),e:mine.e,m:mine.m,c:mine.c||null,name:mine.n||''}; ls.set('me',st.me); pinMe(); render();
 }catch(e){}}
 (function(){ if(!INV)return;
   const draw=()=>{const who=INV.n||'صديقك';
@@ -775,7 +790,7 @@ async function restoreMe(){try{
   if(INV.u&&USE_NET)getJ(`alam/g/${INV.u}`).then(r=>{if(r){INV.n=cleanName(r.n||'');INV.e=EM[r.e]?r.e:null;draw()}}).catch(()=>{});
 })();
 window.__ok=1;var _b=document.getElementById('boot');if(_b)_b.style.display='none';
-refresh(true).then(openMeLink).then(restoreMe).then(async()=>{try{
+refresh(true).then(openMeLink).then(restoreMe).then(async()=>{pinMe();try{
   if(!USE_NET||!st.me||ls.get('nameSent'))return; const nm=cleanName(st.me.name); if(!nm)return;
   const a=await tok(); const cur=await getJ(`alam/g/${a.u}`); if(!cur||cur.n){ls.set('nameSent',1);return}
   const r=await fetch(`${DB}/alam/g/${a.u}/n.json?${[NSQ,'auth='+a.t].filter(Boolean).join('&')}`,{method:'PUT',body:JSON.stringify(nm)}); if(r.ok)ls.set('nameSent',1);
